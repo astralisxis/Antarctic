@@ -23,7 +23,7 @@ import platform
 import stat
 import threading
 import urllib.request
-from contextlib import AsyncExitStack
+from contextlib import AsyncExitStack, suppress
 from dataclasses import dataclass
 from http import HTTPStatus
 from pathlib import Path
@@ -130,11 +130,19 @@ class HostDispatchApp:
                     )
                     for service in self.services:
                         start(service)
+                    supervisor = asyncio.create_task(
+                        supervise_services(self.services), name="service-supervisor"
+                    )
                     await send({"type": "lifespan.startup.complete"})
-                    while True:
-                        message = await receive()
-                        if message.get("type") == "lifespan.shutdown":
-                            break
+                    try:
+                        while True:
+                            message = await receive()
+                            if message.get("type") == "lifespan.shutdown":
+                                break
+                    finally:
+                        supervisor.cancel()
+                        with suppress(asyncio.CancelledError):
+                            await supervisor
                 await send({"type": "lifespan.shutdown.complete"})
             except Exception as exc:
                 await send({"type": "lifespan.startup.failed", "message": str(exc)})
@@ -280,8 +288,12 @@ def tunnel_is_connected(cloudflared: Path) -> bool:
         )
     except (OSError, subprocess.TimeoutExpired):
         return False
+    if result.returncode != 0:
+        return False
     output = f"{result.stdout}\n{result.stderr}".lower()
-    return "does not have any active connection" not in output and "no active connection" not in output
+    if "does not have any active connection" in output or "no active connection" in output:
+        return False
+    return any(marker in output for marker in ("connector id", "connection", "registered"))
 
 
 def start(service: Service) -> None:
@@ -295,6 +307,23 @@ def start(service: Service) -> None:
         start_new_session=os.name != "nt",
     )
     print(f"[start] {service.name} (pid {service.process.pid})", flush=True)
+
+
+async def supervise_services(services: list[Service], interval: float = 2.0) -> None:
+    """Restart hosted child services after an unexpected exit."""
+    while True:
+        await asyncio.sleep(interval)
+        for service in services:
+            process = service.process
+            if process is None or process.poll() is None:
+                continue
+            code = process.returncode
+            print(
+                f"[restart] {service.name} завершился с кодом {code}; перезапускаю",
+                flush=True,
+            )
+            service.process = None
+            start(service)
 
 
 def stop(service: Service) -> None:
@@ -381,12 +410,14 @@ class LazyHostedApp:
         self._wsgi_ready = threading.Event()
         self._wsgi_error: BaseException | None = None
         self._wsgi_stack: AsyncExitStack | None = None
+        self._wsgi_supervisor: asyncio.Task | None = None
         atexit.register(self._stop_wsgi_runtime)
         if is_gunicorn_runtime():
             load_environment()
             self.services = hosted_services(str(Path(sys.executable).absolute()))
-            for service in self.services:
-                start(service)
+            # Child processes must start after the hosted app lifespans have
+            # initialized the database schema. Starting them during import
+            # races SQLite initialization and can crash the support bot.
 
     def __call__(self, first, second=None, third=None):
         # Uvicorn classifies callable objects with a synchronous __call__ as
@@ -466,6 +497,9 @@ class LazyHostedApp:
         )
         for service in self.delegate.services:
             start(service)
+        self._wsgi_supervisor = asyncio.create_task(
+            supervise_services(self.delegate.services), name="service-supervisor"
+        )
 
     async def _handle_wsgi_request(self, environ):
         body_length = int(environ.get("CONTENT_LENGTH") or 0)
@@ -535,6 +569,8 @@ class LazyHostedApp:
                 future.result(timeout=10)
             except Exception:
                 pass
+        if self._wsgi_supervisor is not None:
+            self._wsgi_supervisor.cancel()
         for service in reversed(getattr(self.delegate, "services", [])):
             stop(service)
         loop.call_soon_threadsafe(loop.stop)
@@ -553,7 +589,7 @@ def is_gunicorn_runtime() -> bool:
 
 # Several hosting panels hard-code `gunicorn run:app`. Export a valid app so the
 # project works even when the panel ignores `python run.py`; in Gunicorn mode
-# background services are started while the worker is loading, before requests.
+# background services start from the hosted lifespan after DB initialization.
 app = LazyHostedApp()
 
 

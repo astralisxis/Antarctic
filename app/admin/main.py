@@ -101,7 +101,8 @@ app.add_middleware(
     session_cookie="admin_session",
     max_age=8 * 60 * 60,
     same_site="lax",
-    https_only=settings.env == "prod",
+    # Keep the cookie secure for both accepted production spellings.
+    https_only=settings.env.strip().lower() in {"prod", "production"},
 )
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

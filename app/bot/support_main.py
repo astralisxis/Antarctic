@@ -30,6 +30,7 @@ from app.config import settings
 from app.db import session_scope
 from app.enums import LogLevel, LogSection
 from app.logging_setup import setup_logging
+from app.process_lock import singleton
 from app.models import User
 from app.services import settings_store, support
 from app.services.events import log_event
@@ -156,10 +157,14 @@ async def run() -> None:
 
 
 def main() -> None:
-    try:
-        asyncio.run(run())
-    except (KeyboardInterrupt, SystemExit):
-        log.info("остановлен вручную")
+    with singleton("telegram-support") as acquired:
+        if not acquired:
+            log.error("бот поддержки уже запущен другим процессом; второй polling остановлен")
+            return
+        try:
+            asyncio.run(run())
+        except (KeyboardInterrupt, SystemExit):
+            log.info("остановлен вручную")
 
 
 if __name__ == "__main__":

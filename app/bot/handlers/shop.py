@@ -181,7 +181,8 @@ async def buy(cb: CallbackQuery, session: AsyncSession, user: User) -> None:
 
     # Промежуточный экран: покупка идёт секунды, и клиент должен видеть, что
     # нажатие принято. Отвечаем на callback здесь, дальше правим без ответа.
-    await common.edit(cb, texts.BUYING)
+    await common.answer_callback(cb)
+    await common.edit(cb, texts.BUYING, answer=False)
 
     try:
         order = await orders.buy(session, user, offer)
@@ -343,16 +344,21 @@ async def get_code(cb: CallbackQuery, session: AsyncSession, user: User) -> None
         await common.answer_callback(cb, "Заказ не найден", show_alert=True)
         return
 
+    # LZT может отвечать заметно дольше секунды, поэтому закрываем индикатор
+    # до запроса к маркету. После этого ошибки показываем в самой карточке.
+    await common.answer_callback(cb)
     try:
         value = await orders.issue_code(session, order)
     except orders.OrderError as exc:
-        # Всплывашка, а не правка экрана: карточка с номером должна остаться.
-        await common.answer_callback(cb, str(exc)[:190], show_alert=True)
         text, keyboard = await account_screen(session, order)
-        await common.edit(cb, text, keyboard, answer=False)
+        await common.edit(
+            cb,
+            f"ℹ️ {texts.esc(str(exc)[:190])}\n\n{text}",
+            keyboard,
+            answer=False,
+        )
         return
 
-    await common.answer_callback(cb, "Код пришёл ниже")
     creds = orders.credentials(order)
     if isinstance(cb.message, Message):
         await common.answer(
@@ -377,12 +383,22 @@ async def reset_sessions(cb: CallbackQuery, session: AsyncSession, user: User) -
         await common.answer_callback(cb, "Заказ не найден", show_alert=True)
         return
 
+    # The market request may take up to the configured LZT timeout.  Close the
+    # Telegram spinner first; the final result is then shown in the card.
+    await common.answer_callback(cb)
     try:
         await orders.reset_auth(session, order)
     except orders.OrderError as exc:
-        await common.answer_callback(cb, str(exc)[:190], show_alert=True)
+        text, keyboard = await account_screen(session, order)
+        await common.edit(
+            cb,
+            f"ℹ️ {texts.esc(str(exc)[:190])}\n\n{text}",
+            keyboard,
+            answer=False,
+        )
         return
-    await common.answer_callback(cb, texts.RESET_DONE, show_alert=True)
+    text, keyboard = await account_screen(session, order)
+    await common.edit(cb, f"{texts.RESET_DONE}\n\n{text}", keyboard, answer=False)
 
 
 @router.callback_query(F.data.startswith("sh:replace:"))

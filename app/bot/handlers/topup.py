@@ -204,8 +204,10 @@ async def pick_method(
         return
     await state.clear()
 
-    # Счёт выставляется через сеть — секунда-две. Показываем, что нажатие принято.
-    await common.edit(cb, texts.TOPUP_CREATING)
+    # Счёт выставляется через сеть. Сразу закрываем индикатор кнопки, чтобы он
+    # не жил до ответа платёжного API и не превращался в просроченный callback.
+    await common.answer_callback(cb)
+    await common.edit(cb, texts.TOPUP_CREATING, answer=False)
 
     try:
         payment, calc = await payments.create(session, user, provider, amount)
@@ -261,11 +263,17 @@ async def check_invoice(cb: CallbackQuery, session: AsyncSession, user: User) ->
         await common.edit(cb, texts.TOPUP_STALE)
         return
 
+    await common.answer_callback(cb)
     try:
         credited = await payments.refresh(session, payment)
     except PayError as exc:
         log.warning("проверка счёта %s не удалась: %s", payment.id, exc)
-        await common.answer_callback(cb, "Платёжный сервис не ответил. Попробуйте ещё раз.", show_alert=True)
+        await common.edit(
+            cb,
+            "ℹ️ Платёжный сервис не ответил. Попробуйте ещё раз.\n\n"
+            + texts.TOPUP_WAIT,
+            answer=False,
+        )
         return
 
     if credited is not None:
@@ -273,6 +281,7 @@ async def check_invoice(cb: CallbackQuery, session: AsyncSession, user: User) ->
             cb,
             texts.topup_paid(amount=credited.amount, balance=credited.balance),
             keyboards.topup_done(),
+            answer=False,
         )
         # Пригласившему сообщаем сами: фоновая задача этот счёт уже не увидит.
         if cb.bot is not None:
@@ -280,9 +289,9 @@ async def check_invoice(cb: CallbackQuery, session: AsyncSession, user: User) ->
         return
 
     if payment.status == PaymentStatus.EXPIRED.value:
-        await common.edit(cb, texts.TOPUP_STALE)
+        await common.edit(cb, texts.TOPUP_STALE, answer=False)
         return
-    await common.answer_callback(cb, texts.TOPUP_WAIT, show_alert=True)
+    await common.edit(cb, texts.TOPUP_WAIT, answer=False)
 
 
 @router.callback_query(F.data.startswith("tp:x:"))
@@ -297,20 +306,21 @@ async def cancel_invoice(
         await common.edit(cb, texts.TOPUP_STALE)
         return
 
+    await common.answer_callback(cb)
     if not await payments.cancel(session, payment):
         # Не говорим, что счёт отменён, пока провайдер этого не подтвердил:
         # он мог принять оплату прямо перед сетевым сбоем. Pending-счёт
         # останется доступен для фоновой проверки оплаты.
-        await common.answer_callback(
+        await common.edit(
             cb,
             "Не удалось подтвердить отмену у платёжного сервиса. "
             "Счёт оставлен активным, попробуйте проверить оплату позже.",
-            show_alert=True,
+            answer=False,
         )
         return
     await state.set_state(TopupStates.amount)
     text, keyboard = await _root_screen(session, user)
-    await common.edit(cb, f"{texts.TOPUP_CANCELLED}\n\n{text}", keyboard)
+    await common.edit(cb, f"{texts.TOPUP_CANCELLED}\n\n{text}", keyboard, answer=False)
 
 
 # --------------------------------------------------------------------------- #

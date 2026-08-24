@@ -2,7 +2,17 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
+try:
+    # StrEnum was added to the standard library in Python 3.11.
+    from enum import StrEnum
+except ImportError:  # pragma: no cover - used on Python 3.10
+    from enum import Enum
+
+    class StrEnum(str, Enum):
+        """Python 3.10-compatible subset of :class:`enum.StrEnum`."""
+
+        def __str__(self) -> str:
+            return str(self.value)
 
 
 class OrderStatus(StrEnum):

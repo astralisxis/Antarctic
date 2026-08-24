@@ -24,6 +24,9 @@ router = APIRouter()
 
 TRUE = "1"
 FALSE = "0"
+# Telegram accepts at most 4096 characters in a text message.  Dynamic
+# screens add their own headings and hints, so leave room for that wrapper.
+TEXT_SETTING_LIMIT = 3500
 
 
 def _groups() -> dict[str, list[settings_store.SettingDef]]:
@@ -101,6 +104,11 @@ async def save(request: Request, session: DbSession, admin: StaffAdmin):
                 continue
             to_write[d.key] = raw
         else:
+            if d.kind in {"text", "string"} and len(raw) > TEXT_SETTING_LIMIT:
+                errors.append(
+                    f"«{d.title}»: текст слишком длинный — максимум {TEXT_SETTING_LIMIT} символов."
+                )
+                continue
             to_write[d.key] = raw
 
     if errors:

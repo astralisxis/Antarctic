@@ -42,6 +42,7 @@ from app.integrations.cryptobot import close_cryptobot
 from app.integrations.lzt import close_lzt
 from app.integrations.xrocket import close_xrocket
 from app.logging_setup import setup_logging
+from app.process_lock import singleton
 from app.services import broadcasts, catalog, payments, reviews, settings_store
 from app.services.events import log_event
 
@@ -218,10 +219,14 @@ async def run() -> None:
 
 
 def main() -> None:
-    try:
-        asyncio.run(run())
-    except (KeyboardInterrupt, SystemExit):
-        log.info("остановлен вручную")
+    with singleton("telegram-main") as acquired:
+        if not acquired:
+            log.error("основной бот уже запущен другим процессом; второй polling остановлен")
+            return
+        try:
+            asyncio.run(run())
+        except (KeyboardInterrupt, SystemExit):
+            log.info("остановлен вручную")
 
 
 if __name__ == "__main__":

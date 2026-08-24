@@ -31,8 +31,39 @@ log = logging.getLogger("bot")
 _PARSE_ERRORS = ("can't parse entities", "unsupported start tag", "can't find end tag")
 _PHOTO_FILE_IDS: dict[Path, str] = {}
 CAPTION_LIMIT = 1000
+TEXT_LIMIT = 4096
 
 ReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup
+
+
+def _chunks(text: str, limit: int = TEXT_LIMIT) -> list[str]:
+    """Split a Telegram message without cutting a line when possible."""
+    if len(text) <= limit:
+        return [text]
+    result: list[str] = []
+    rest = text
+    while len(rest) > limit:
+        cut = rest.rfind("\n", 0, limit + 1)
+        if cut < max(1, limit // 2):
+            cut = rest.rfind(" ", 0, limit + 1)
+        if cut < max(1, limit // 2):
+            cut = limit
+        result.append(rest[:cut].rstrip())
+        rest = rest[cut:].lstrip()
+    if rest or not result:
+        result.append(rest)
+    return result
+
+
+async def _answer_one(message: Message, text: str, keyboard: ReplyMarkup | None, **kw) -> Message:
+    """Send one chunk and retry once without HTML if Telegram rejects markup."""
+    try:
+        return await message.answer(text, reply_markup=keyboard, **kw)
+    except TelegramBadRequest as exc:
+        if not _is_parse_error(exc):
+            raise
+        log.warning("битая разметка в тексте из админки, отправляю как есть: %s", exc)
+        return await message.answer(text, reply_markup=keyboard, parse_mode=None, **kw)
 
 
 def _is_parse_error(exc: TelegramBadRequest) -> bool:
@@ -62,13 +93,14 @@ async def answer(
     message: Message, text: str, keyboard: ReplyMarkup | None = None, **kw
 ) -> Message:
     await commit_before_io()
-    try:
-        return await message.answer(text, reply_markup=keyboard, **kw)
-    except TelegramBadRequest as exc:
-        if not _is_parse_error(exc):
-            raise
-        log.warning("битая разметка в тексте из админки, отправляю как есть: %s", exc)
-        return await message.answer(text, reply_markup=keyboard, parse_mode=None, **kw)
+    chunks = _chunks(text)
+    sent: Message | None = None
+    for index, chunk in enumerate(chunks):
+        # Keep inline/reply controls on the final part so they remain directly
+        # under the actionable end of a long response.
+        sent = await _answer_one(message, chunk, keyboard if index == len(chunks) - 1 else None, **kw)
+    assert sent is not None
+    return sent
 
 
 def _photo_input(photo: Path) -> str | FSInputFile:
@@ -159,15 +191,21 @@ async def send_text(
     админке, и одна угловая скобка не должна съедать ответ клиенту.
     """
     await commit_before_io()
-    try:
-        return await bot.send_message(chat_id, text, reply_markup=keyboard, **kw)
-    except TelegramBadRequest as exc:
-        if not _is_parse_error(exc):
-            raise
-        log.warning("битая разметка в тексте из админки, отправляю как есть: %s", exc)
-        return await bot.send_message(
-            chat_id, text, reply_markup=keyboard, parse_mode=None, **kw
-        )
+    sent: Message | None = None
+    chunks = _chunks(text)
+    for index, chunk in enumerate(chunks):
+        markup = keyboard if index == len(chunks) - 1 else None
+        try:
+            sent = await bot.send_message(chat_id, chunk, reply_markup=markup, **kw)
+        except TelegramBadRequest as exc:
+            if not _is_parse_error(exc):
+                raise
+            log.warning("битая разметка в тексте из админки, отправляю как есть: %s", exc)
+            sent = await bot.send_message(
+                chat_id, chunk, reply_markup=markup, parse_mode=None, **kw
+            )
+    assert sent is not None
+    return sent
 
 
 async def edit(
