@@ -1,0 +1,311 @@
+[admin] login_failed user=None неудачный вход: smoke (1 из 10)
+наполнил базу: страна 1, клиент 1, заказ 1
+счёта: опрос 1, проверка 2, вручную 3
+
+[ok   ] 303 GET / · без входа — должен быть редирект
+        → /login?next=/
+[ждали] 401 POST /login · неверный пароль
+[ok   ] 303 POST /login · вход
+        → /
+[ok   ] 200 GET / · после /login
+        Обзор · строк в таблицах: 10
+[ok   ] 200 GET / · обзор
+        Обзор · строк в таблицах: 10
+[ok   ] 200 GET /orders · заказы
+        Заказы · строк в таблицах: 2
+[ok   ] 200 GET /orders?stuck=1 · зависшие заказы
+        Заказы · строк в таблицах: 1
+[ok   ] 200 GET /orders/1 · карточка заказа
+        Заказ №1 · строк в таблицах: 14
+[ok   ] 200 GET /users · пользователи
+        Пользователи · строк в таблицах: 2
+[ok   ] 200 GET /users?only=paid&sort=topup · с пополнениями
+        Пользователи · строк в таблицах: 2
+[ok   ] 200 GET /users/1 · карточка клиента
+        @alice · строк в таблицах: 9
+[ok   ] 200 GET /catalog · каталог
+        Каталог · строк в таблицах: 2
+[ok   ] 200 GET /catalog/1 · правка страны
+        Индонезия +62
+[ok   ] 200 GET /catalog/new · новая страна
+        Новая страна
+[ok   ] 200 GET /catalog/market · страны маркета
+        Страны маркета · строк в таблицах: 1
+[ok   ] 200 GET /payments · платежи
+        Платежи · строк в таблицах: 4
+[ok   ] 200 GET /settings · настройки
+        Настройки
+[ok   ] 200 GET /logs · логи
+        Логи · строк в таблицах: 10
+[ok   ] 200 GET /logs?section=shop · логи магазина
+        Логи · строк в таблицах: 3
+[ok   ] 200 GET /support · поддержка
+        Поддержка · строк в таблицах: 2
+[ok   ] 200 GET /reviews · отзывы
+        Отзывы · строк в таблицах: 1
+[ok   ] 200 GET /broadcasts · рассылки
+        Рассылки · строк в таблицах: 1
+[ok   ] 303 GET /broadcasts/99999 · рассылки нет
+        → /broadcasts
+[ok   ] 303 GET /orders/99999 · заказа нет
+        → /orders
+[ok   ] 303 POST /broadcasts · создать рассылку
+        → /broadcasts/1
+[ok   ] 200 GET /broadcasts/1 · после /broadcasts
+        Рассылка №1 · Черновик рассылки №1 сохранён. Проверьте его и запустите.
+[ok   ] 200 GET /broadcasts/1 · карточка рассылки
+        Рассылка №1 · Получатели ещё не зафиксированы. После запуска в очередь попадут клиенты, которые сейчас входят в выбранную аудиторию.
+[ok   ] 303 POST /broadcasts/1/start · запустить рассылку
+        → /broadcasts/1
+[ok   ] 200 GET /broadcasts/1 · после /broadcasts/1/start
+        Рассылка №1 · Рассылка запущена: в очереди 1 получателей.
+[ok   ] 303 POST /broadcasts/1/cancel · отменить рассылку
+        → /broadcasts/1
+[ok   ] 200 GET /broadcasts/1 · после /broadcasts/1/cancel
+        Рассылка №1 · Рассылка отменена. Уже доставленные сообщения остаются у получателей.
+[ok   ] 303 POST /orders/1/code · выдать код
+        → /orders/1
+[ok   ] 200 GET /orders/1 · после /orders/1/code
+        Заказ №1 · Код 55231 получен и виден клиенту в боте. · строк в таблицах: 15
+[ok   ] 303 POST /orders/1/reset · сбросить сессии
+        → /orders/1
+[ok   ] 200 GET /orders/1 · после /orders/1/reset
+        Заказ №1 · Сессии номера +628…22 сброшены. · строк в таблицах: 16
+[ok   ] 303 POST /orders/1/done · завершить заказ
+        → /orders/1
+[ok   ] 200 GET /orders/1 · после /orders/1/done
+        Заказ №1 · Заказ завершён. · строк в таблицах: 16
+[ok   ] 303 POST /orders/1/refund · возврат
+        → /orders/1
+[ok   ] 200 GET /orders/1 · после /orders/1/refund
+        Заказ №1 · Деньги вернулись на баланс клиента. · строк в таблицах: 18
+[ok   ] 303 POST /orders/1/refund · возврат повторно
+        → /orders/1
+[ok   ] 200 GET /orders/1 · после /orders/1/refund
+        Заказ №1 · По этому заказу деньги уже возвращены. · строк в таблицах: 18
+[ok   ] 303 POST /catalog/refresh · обновить наличие всех
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/refresh
+        Каталог · Наличие обновлено. ID: 1 · строк в таблицах: 2
+[ok   ] 303 POST /catalog/1/refresh · обновить наличие одной
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1/refresh
+        Каталог · Индонезия +62: в наличии: 1. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/1/toggle · скрыть страну
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1/toggle
+        Каталог · Индонезия +62: скрыта из витрины. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/1/toggle · вернуть страну
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1/toggle
+        Каталог · Индонезия +62: в витрине. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/1 · правка страны
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1
+        Каталог · Сохранено. · строк в таблицах: 2
+[ждали] 400 POST /catalog/new · занятый код позиции
+        Новая страна · Код ID уже занят.
+[ok   ] 303 POST /catalog/new · новая страна
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/new
+        Каталог · Позиция США +1 создана. Наличие проверится в ближайшем обходе. · строк в таблицах: 3
+[ok   ] 303 POST /catalog/market/ID · проверить одну страну
+        → /catalog/market
+[ok   ] 200 GET /catalog/market · после /catalog/market/ID
+        Страны маркета · Индонезия: лотов 1, от 12,50 ₽, средняя по выборке 12,50 ₽. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/market/scan · обход по каталогу
+        → /catalog/market
+[ok   ] 200 GET /catalog/market · после /catalog/market/scan
+        Страны маркета · Обход запущен: 2 стран, это примерно 3 с. Обновите страницу, чтобы увидеть цифры. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/market/scan · обход, пока идёт прошлый
+        → /catalog/market
+[ok   ] 200 GET /catalog/market · после /catalog/market/scan
+        Страны маркета · Обход уже идёт — дождитесь конца. · строк в таблицах: 2
+[ok   ] 200 GET /catalog/market?only=all · страны маркета: все
+        Страны маркета · Последний обход: 2 из 2 стран, закончился 21.08.2026 13:44. · строк в таблицах: 90
+[ok   ] 200 GET /catalog/new?code=ID · форма, заполненная под страну
+        Новая страна
+[ok   ] 200 GET /catalog/1/delete · подтверждение удаления
+        Удалить Индонезия +62? · Заказы (1) останутся в истории: название и цену они хранят у себя, ссылка на позицию просто обнулится. Если нужно только убрать её из витрины — вернитесь и нажм · строк в таблицах: 6
+[ok   ] 303 POST /catalog/1/delete · удалить позицию
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1/delete
+        Каталог · Позиция Индонезия +62 удалена. Заказов осталось в истории: 1. · строк в таблицах: 2
+[ok   ] 303 POST /catalog/1/delete · удалить второй раз
+        → /catalog
+[ok   ] 200 GET /catalog · после /catalog/1/delete
+        Каталог · строк в таблицах: 2
+[ok   ] 200 GET /orders/1 · заказ удалённой позиции
+        Заказ №1 · строк в таблицах: 18
+[ok   ] 200 GET /payments?status=pending · ожидающие счёта
+        Платежи · строк в таблицах: 4
+[ok   ] 200 GET /payments?provider=xrocket · счёта xRocket
+        Платежи · строк в таблицах: 2
+[ok   ] 200 GET /payments?q=900101 · поиск по внешнему id
+        Платежи · строк в таблицах: 2
+[ok   ] 200 GET /payments?q=1001 · поиск по tg_id
+        Платежи · строк в таблицах: 4
+[ok   ] 200 GET /payments?q=alice · поиск по имени
+        Платежи · строк в таблицах: 4
+[ok   ] 200 GET /payments?q=нет-такого · поиск без совпадений
+        Платежи · строк в таблицах: 1
+[ok   ] 303 POST /payments/2/check · проверить оплаченный счёт
+        → /payments
+[ok   ] 200 GET /payments · после /payments/2/check
+        Платежи · Оплата пришла, зачислено 500 ₽. · строк в таблицах: 4
+[ok   ] 303 POST /payments/2/check · проверить его же повторно
+        → /payments
+[ok   ] 200 GET /payments · после /payments/2/check
+        Платежи · Счёт уже закрыт — проверять нечего. · строк в таблицах: 4
+[ok   ] 303 POST /payments/poll · сверить ожидающие
+        → /payments
+[ok   ] 200 GET /payments · после /payments/poll
+        Платежи · Зачислено счётов: 1 на 500 ₽. · строк в таблицах: 4
+[ok   ] 303 POST /payments/poll · сверить второй раз
+        → /payments
+[ok   ] 200 GET /payments · после /payments/poll
+        Платежи · Новых оплат нет. · строк в таблицах: 4
+[ok   ] 303 POST /payments/3/credit · зачислить вручную
+        → /payments
+[ok   ] 200 GET /payments · после /payments/3/credit
+        Платежи · Зачислено 120 ₽. Клиент увидит баланс в профиле, сообщение из админки не уходит. · строк в таблицах: 4
+[ok   ] 303 POST /payments/3/credit · зачислить повторно
+        → /payments
+[ok   ] 200 GET /payments · после /payments/3/credit
+        Платежи · Зачислять можно только ожидающий счёт. · строк в таблицах: 4
+[ok   ] 303 POST /payments/99999/check · счёта нет
+        → /payments
+[ok   ] 200 GET /payments · после /payments/99999/check
+        Платежи · Счёта №99999 нет. · строк в таблицах: 4
+[ok   ] 303 POST /payments/4/expire · снять счёт
+        → /payments
+[ok   ] 200 GET /payments · после /payments/4/expire
+        Платежи · Счёт №4 снят. · строк в таблицах: 5
+[ok   ] 303 POST /payments/4/expire · снять его же повторно
+        → /payments
+[ok   ] 200 GET /payments · после /payments/4/expire
+        Платежи · Счёт уже закрыт. · строк в таблицах: 5
+[ok   ] 200 GET /payments?status=paid · оплаченные счёта
+        Платежи · строк в таблицах: 4
+[ok   ] 303 POST /users/1/balance · плюс баланс
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/balance
+        @alice · Баланс изменён на +150 ₽, стало 1 570 ₽. · строк в таблицах: 15
+[ok   ] 303 POST /users/1/balance · минус баланс
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/balance
+        @alice · Баланс изменён на −50 ₽, стало 1 520 ₽. · строк в таблицах: 16
+[ok   ] 303 POST /users/1/balance · списать больше остатка
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/balance
+        @alice · Баланс изменён на −1 520 ₽, стало 0 ₽. Запрошено было −999 999 ₽ — списали до нуля. · строк в таблицах: 17
+[ok   ] 303 POST /users/1/balance · мусор в сумме
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/balance
+        @alice · Сумма не разобралась. Пример: 500 или -250. · строк в таблицах: 17
+[ok   ] 303 POST /users/1/settings · ограничения
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/settings
+        @alice · Сохранено. · строк в таблицах: 17
+[ok   ] 303 POST /users/1/settings · процент больше 100
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/settings
+        @alice · Процент — целое число от 0 до 100. · строк в таблицах: 17
+[ok   ] 303 POST /users/1/ban · бан на 3 дня
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/ban
+        @alice · Доступ к магазину закрыт. · строк в таблицах: 17
+[ok   ] 303 POST /users/1/unban · снять бан
+        → /users/1
+[ok   ] 200 GET /users/1 · после /users/1/unban
+        @alice · Ограничение снято. · строк в таблицах: 17
+[ok   ] 303 POST /settings · сохранить настройки
+        → /settings
+[ok   ] 200 GET /settings · после /settings
+        Настройки · Сохранено. Изменено полей: 3.
+[ok   ] 303 POST /settings · сохранить те же значения
+        → /settings
+[ok   ] 200 GET /settings · после /settings
+        Настройки · Ничего не изменилось.
+[ok   ] 303 POST /settings · процент больше 100
+        → /settings
+[ok   ] 200 GET /settings · после /settings
+        Настройки · «Процент с пополнений реферала»: процент больше 100 не бывает.
+[ok   ] 303 POST /settings · ссылка без https
+        → /settings
+[ok   ] 200 GET /settings · после /settings
+        Настройки · «Ссылка на канал отзывов»: ссылка должна начинаться с https://.
+[ok   ] 200 GET /settings · настройки после правок
+        Настройки
+[ok   ] 303 POST /logout · выход
+        → /login
+[ok   ] 200 GET /login · после /logout
+        Админка
+[ok   ] 303 GET /users · после выхода
+        → /login?next=/users
+[ok   ] 303 POST /login · вход поддержки
+        → /support
+[ok   ] 200 GET /support · после /login
+        Поддержка · строк в таблицах: 2
+[ждали] 303 GET / · корень поддержки ведёт к обращениям
+        → /support
+[ok   ] 200 GET /support · доступный раздел поддержки
+        Поддержка · строк в таблицах: 2
+[ok   ] 200 GET /support/1 · карточка обращения
+        Обращение №1 · строк в таблицах: 1
+[ждали] 403 GET /orders · support: доступ закрыт
+[ждали] 403 GET /orders/1 · support: доступ закрыт
+[ждали] 403 GET /users · support: доступ закрыт
+[ждали] 403 GET /users/1 · support: доступ закрыт
+[ждали] 403 GET /payments · support: доступ закрыт
+[ждали] 403 GET /catalog · support: доступ закрыт
+[ждали] 403 GET /reviews · support: доступ закрыт
+[ждали] 403 GET /logs · support: доступ закрыт
+[ждали] 403 GET /settings · support: доступ закрыт
+[ждали] 403 GET /security/ip · support: доступ закрыт
+[ждали] 403 GET /maintenance · support: доступ закрыт
+[ждали] 403 GET /broadcasts · support: доступ закрыт
+[ждали] 403 POST /users/1/balance · support: действие закрыто
+[ждали] 403 POST /orders/1/refund · support: действие закрыто
+[ждали] 403 POST /payments/3/credit · support: действие закрыто
+[ждали] 403 POST /settings · support: действие закрыто
+[ждали] 403 POST /maintenance · support: действие закрыто
+[ok   ] 303 POST /logout · выход поддержки
+        → /login
+[ok   ] 200 GET /login · после /logout
+        Админка
+[ok   ] 303 POST /login · вход администратора
+        → /
+[ok   ] 200 GET / · после /login
+        Обзор · строк в таблицах: 13
+[ok   ] 200 GET / · обзор администратора
+        Обзор · строк в таблицах: 13
+[ok   ] 200 GET /settings · настройки администратора
+        Настройки
+[ждали] 403 GET /maintenance · обслуживание только владельцу
+[ждали] 403 GET /security/ip · безопасность входа только владельцу
+[ok   ] 303 POST /logout · выход администратора
+        → /login
+[ok   ] 200 GET /login · после /logout
+        Админка
+
+шагов: 153
+ни одного ответа 4xx/5xx там, где его не ждали.
+
+=== база после прогона ===
+    клиент: баланс=0 потрачено=0 заказов=0 процент=25 бан=False
+    заказ №1: refunded возврат=True запросов кода=1 позиция=None (снимок: ID Индонезия +62)
+    страна US: цена=9900 лимит=4000 активна=True наличие=None
+    счёт №1: xrocket paid сумма=50000 зачислено=50000 USDT
+    счёт №2: cryptobot paid сумма=50000 зачислено=50000 RUB
+    счёт №3: cryptobot paid сумма=12000 зачислено=12000 RUB
+    счёт №4: cryptobot expired сумма=8000 зачислено=0 RUB
+    маркет ID: лотов=1 выборка=1 от=1250 средняя=1250 ошибка=None
+    маркет US: лотов=1 выборка=1 от=1250 средняя=1250 ошибка=None
+    сумма движений=0 остаток=0 сходится
+    настройки: срок кода=12 ч, процент=15, минимум пополнения=10000
+
+вызовов маркета: search, fast-buy:9001, code:9001, reset:9001, search, search, search, search, search
+вызовов Crypto Bot: rate:USDT-RUB, createInvoice, createInvoice, getInvoices, getInvoices, getInvoices, createInvoice, deleteInvoice:900103
+вызовов xRocket: tg-invoices, tg-invoices:500101
+База прогона: smoke_admin.db

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ self.h1() }}{% endblock %} — админка</title>
+  <link rel="stylesheet" href="/static/admin.css?v=1">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      Номера
+      <div class="sub">админка{% if ENV != 'prod' %} · {{ ENV }}{% endif %}</div>
+    </div>
+
+    <nav class="nav">
+      {% for item in NAV %}
+        {% if admin.role != 'support' or item.key == 'support' %}
+        {% set c = (counts | default({})).get(item.key) %}
+        <a href="{{ item.url }}"
+           class="{% if active == item.key %}active{% endif %}{% if not item.ready %} soon{% endif %}">
+          <span>{{ item.title }}</span>
+          {% if c %}<span class="count">{{ c }}</span>{% endif %}
+        </a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+
+    <div class="side-foot">
+      {% if admin %}{{ admin.login }}{% endif %}
+      <form method="post" action="/logout"><button type="submit">выйти</button></form>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="head">
+      <div>
+        <h1>{% block h1 %}{% endblock %}</h1>
+        {% block sub %}{% endblock %}
+      </div>
+      <div class="meta">{% block meta %}{% endblock %}</div>
+    </div>
+    {% if flash %}
+      <div class="note flash{% if flash.ok %} note--quiet{% endif %}">{{ flash.text }}</div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block h1 %}{{ u.display_name }}{% endblock %}
+{% block sub %}<div class="sub">Telegram ID {{ u.tg_id }} · в базе с {{ u.created_at | dt }}</div>{% endblock %}
+{% block meta %}<a class="link" href="/users">к списку</a>{% endblock %}
+
+{% block content %}
+
+{% if u.is_banned %}
+  <div class="note flash">
+    Доступ закрыт{% if u.ban_reason %}: {{ u.ban_reason }}{% endif %}.
+    {% if u.banned_until %}Снимется {{ u.banned_until | dt }}.{% else %}Бессрочно.{% endif %}
+  </div>
+{% endif %}
+
+<div class="grid grid--4">
+  <div class="card stat"><div class="k">Баланс</div><div class="v">{{ u.balance | money }}</div></div>
+  <div class="card stat">
+    <div class="k">Пополнено</div><div class="v">{{ u.total_topup | money }}</div>
+    <div class="d">{% if u.first_paid_at %}первое {{ u.first_paid_at | dt }}{% else %}не платил{% endif %}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Куплено</div><div class="v">{{ u.total_spent | money }}</div>
+    <div class="d">{{ u.orders_count | num }} заказов</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Рефералы</div><div class="v">{{ invited | num }}</div>
+    <div class="d">{{ u.ref_earned | money }} · {{ percent }}%</div>
+  </div>
+</div>
+
+<div class="grid grid--2" style="margin-top:10px">
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Правка баланса</div>
+    <form method="post" action="/users/{{ u.id }}/balance">
+      <div class="field">
+        <label for="amount">Сумма, ₽</label>
+        <input class="input" id="amount" name="amount" placeholder="500 или -250" required>
+        <div class="hint">Минус списывает. Операция попадёт в книгу баланса и в логи.</div>
+      </div>
+      <div class="field">
+        <label for="comment">Комментарий</label>
+        <input class="input" id="comment" name="comment" placeholder="компенсация по заказу №12">
+      </div>
+      <button class="btn btn--primary" type="submit">Применить</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Ограничения</div>
+    <form method="post" action="/users/{{ u.id }}/settings">
+      <div class="field field--row">
+        <input type="checkbox" id="restrict_buy" name="restrict_buy" value="1" {% if u.restrict_buy %}checked{% endif %}>
+        <label for="restrict_buy">Запретить покупки</label>
+      </div>
+      <div class="field field--row">
+        <input type="checkbox" id="restrict_topup" name="restrict_topup" value="1" {% if u.restrict_topup %}checked{% endif %}>
+        <label for="restrict_topup">Запретить пополнение</label>
+      </div>
+      <div class="field field--row">
+        <input type="checkbox" id="restrict_support" name="restrict_support" value="1" {% if u.restrict_support %}checked{% endif %}>
+        <label for="restrict_support">Запретить обращения в поддержку</label>
+      </div>
+      <div class="field">
+        <label for="ref_percent">Личный процент с рефералов</label>
+        <input class="input" id="ref_percent" name="ref_percent" value="{{ u.ref_percent if u.ref_percent is not none else '' }}" placeholder="пусто — общий">
+      </div>
+      <div class="field">
+        <label for="admin_note">Заметка для админов</label>
+        <textarea id="admin_note" name="admin_note" rows="2">{{ u.admin_note or "" }}</textarea>
+      </div>
+      <button class="btn btn--primary" type="submit">Сохранить</button>
+    </form>
+
+    <div class="section-title">Доступ</div>
+    {% if u.is_banned %}
+      <form method="post" action="/users/{{ u.id }}/unban">
+        <button class="btn" type="submit">Снять блокировку</button>
+      </form>
+    {% else %}
+      <form class="bar" method="post" action="/users/{{ u.id }}/ban" style="margin:0">
+        <div class="field">
+          <label for="reason">Причина</label>
+          <input class="input" id="reason" name="reason" placeholder="возвраты без причины">
+        </div>
+        <div class="field">
+          <label for="days">Дней</label>
+          <input class="input" id="days" name="days" placeholder="0" style="width:80px">
+        </div>
+        <button class="btn" type="submit">Заблокировать</button>
+      </form>
+      <div class="hint">0 дней — бессрочно.</div>
+    {% endif %}
+  </div>
+</div>
+
+{% if referrer %}
+  <div class="note note--quiet" style="margin-top:10px">
+    Пришёл по ссылке <a class="link" href="/users/{{ referrer.id }}">{{ referrer.display_name }}</a>.
+  </div>
+{% endif %}
+
+<div class="section-title">Заказы</div>
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:54px">№</th>
+        <th style="width:96px">Время</th>
+        <th>Страна</th>
+        <th style="width:140px">Номер</th>
+        <th class="num" style="width:88px">Цена</th>
+        <th style="width:104px">Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+        <tr>
+          <td><a class="link mono" href="/orders/{{ o.id }}">{{ o.id }}</a></td>
+          <td class="muted mono nowrap">{{ o.created_at | time }}</td>
+          <td>{{ o.offer_title }}</td>
+          <td class="mono">{{ o.phone or "—" }}</td>
+          <td class="num">{{ o.price | money }}</td>
+          <td class="muted">{{ o.status | order_status }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Покупок не было.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="grid grid--2" style="margin-top:10px">
+  <div>
+    <div class="section-title" style="margin-top:0">Книга баланса</div>
+    <div class="panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:96px">Время</th>
+            <th>Операция</th>
+            <th class="num" style="width:96px">Сумма</th>
+            <th class="num" style="width:96px">Остаток</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in txs %}
+            <tr>
+              <td class="muted mono nowrap">{{ t.created_at | time }}</td>
+              <td>
+                <span class="tag">{{ t.kind | tx_kind }}</span>
+                {% if t.comment %}<span class="muted"> {{ t.comment }}</span>{% endif %}
+              </td>
+              <td class="num">{{ t.amount | money(true) }}</td>
+              <td class="num muted">{{ t.balance_after | money }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="empty">Операций не было.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-title" style="margin-top:0">Пополнения</div>
+    <div class="panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:96px">Время</th>
+            <th>Провайдер</th>
+            <th class="num" style="width:96px">Сумма</th>
+            <th style="width:120px">Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+            <tr>
+              <td class="muted mono nowrap">{{ (p.paid_at or p.created_at) | time }}</td>
+              <td>{{ p.provider | provider }}</td>
+              <td class="num">{{ (p.credited or p.amount) | money }}</td>
+              <td class="muted">{{ p.status | pay_status }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="empty">Пополнений не было.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

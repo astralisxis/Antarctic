@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block h1 %}{% if d.id %}{{ d.title or "Позиция" }}{% else %}Новая страна{% endif %}{% endblock %}
+{% block sub %}<div class="sub">Цена — для покупателя. Лимит закупки — сколько бот готов отдать маркету за лот</div>{% endblock %}
+{% block meta %}<a class="link" href="/catalog">к списку</a>{% endblock %}
+
+{% block content %}
+
+{% if error %}<div class="note flash">{{ error }}</div>{% endif %}
+
+<datalist id="country-codes">
+  {% for code, c in countries.items() %}
+    <option value="{{ code }}">{{ c.name }} {{ c.phone }}</option>
+  {% endfor %}
+</datalist>
+
+<form method="post" action="{% if d.id %}/catalog/{{ d.id }}{% else %}/catalog/new{% endif %}">
+  <div class="grid grid--2">
+    <div class="card">
+      <div class="section-title" style="margin-top:0">Витрина</div>
+
+      <div class="field">
+        <label for="title">Название</label>
+        <input class="input" id="title" name="title" value="{{ d.title }}" placeholder="Индонезия +62" required>
+      </div>
+
+      <div class="field">
+        <label for="code">Код позиции</label>
+        <input class="input" id="code" name="code" value="{{ d.code }}" placeholder="ID" maxlength="8" list="country-codes" required>
+        <div class="hint">Наш внутренний код, попадает в историю заказов.</div>
+      </div>
+
+      <div class="field">
+        <label for="price">Цена для покупателя, ₽</label>
+        <input class="input" id="price" name="price" value="{{ d.price }}" placeholder="49" required>
+      </div>
+
+      <div class="field">
+        <label for="sort">Порядок в списке</label>
+        <input class="input" id="sort" name="sort" value="{{ d.sort }}">
+        <div class="hint">Меньше — выше в витрине.</div>
+      </div>
+
+      <div class="field">
+        <label for="description">Описание под названием</label>
+        <textarea id="description" name="description" rows="2" maxlength="255">{{ d.description }}</textarea>
+      </div>
+
+      <div class="field">
+        <label for="guarantee_hours">Гарантия и выдача кода, часов</label>
+        <input class="input" id="guarantee_hours" name="guarantee_hours" type="number" min="1" max="720" value="{{ d.guarantee_hours or 12 }}" required>
+        <div class="hint">По умолчанию 12 часов. Значение сохраняется в заказе при покупке.</div>
+      </div>
+
+      <div class="field field--row">
+        <input type="checkbox" id="is_active" name="is_active" value="1" {% if d.is_active %}checked{% endif %}>
+        <label for="is_active">Показывать в витрине</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-top:0">Подбор лота на LZT</div>
+
+      <div class="field">
+        <label for="lzt_country">Код страны на маркете</label>
+        <input class="input" id="lzt_country" name="lzt_country" value="{{ d.lzt_country }}" placeholder="ID" list="country-codes" required>
+        <div class="hint">
+          Значение параметра country[] запроса GET /telegram. Две буквы, регистр не важен.
+          Лоты и цены по странам — <a class="link" href="/catalog/market">страны маркета</a>.
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="buy_limit">Лимит закупки, ₽</label>
+        <input class="input" id="buy_limit" name="buy_limit" value="{{ d.buy_limit }}" placeholder="20" required>
+        <div class="hint">Дороже этого бот лот не берёт. Если под лимит ничего нет — «нет в наличии».</div>
+      </div>
+
+      <div class="field">
+        <label for="spam_filter">Спам-блок</label>
+        <select id="spam_filter" name="spam_filter">
+          {% for v in yesno %}
+            <option value="{{ v }}" {% if d.spam_filter == v %}selected{% endif %}>{{ spam_titles.get(v, v) }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="password_filter">Пароль в лоте</label>
+        <select id="password_filter" name="password_filter">
+          {% for v in yesno %}
+            <option value="{{ v }}" {% if d.password_filter == v %}selected{% endif %}>{{ pass_titles.get(v, v) }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Источники лота</label>
+        <div class="picks">
+          {% for o in origins %}
+            <label>
+              <input type="checkbox" name="origin_filter" value="{{ o.value }}" {% if o.on %}checked{% endif %}>
+              <span>{{ o.title }}</span>
+            </label>
+          {% endfor %}
+        </div>
+        <div class="hint">Ничего не отмечено — берётся любой источник. Перечень — значения origin[] у маркета.</div>
+      </div>
+
+      <div class="field">
+        <label for="extra_filters">Доп. параметры поиска</label>
+        <textarea id="extra_filters" name="extra_filters" rows="2" class="mono" placeholder='{"telegram_dc": 2}'>{{ d.extra_filters }}</textarea>
+        <div class="hint">JSON-объект, добавляется в запрос как есть. Список параметров — GET /telegram/params.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="acts" style="margin-top:14px">
+    <button class="btn btn--primary" type="submit">Сохранить</button>
+    <a class="btn" href="/catalog">Отмена</a>
+    {% if d.id %}<a class="btn" href="/catalog/{{ d.id }}/delete">Удалить</a>{% endif %}
+  </div>
+</form>
+
+{% endblock %}

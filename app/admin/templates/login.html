@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вход — админка</title>
+  <link rel="stylesheet" href="/static/admin.css?v=1">
+</head>
+<body>
+<div class="login">
+  {% if banned_ip %}
+    <div class="card">
+      <h1>Доступ закрыт</h1>
+      <div class="sub">Магазин номеров</div>
+      <div class="note note--quiet" style="margin:12px 0">{{ error }}</div>
+      <div class="hint">Адрес: <span class="mono">{{ banned_ip }}</span></div>
+    </div>
+  {% else %}
+  <form class="card" method="post" action="/login">
+    <h1>Админка</h1>
+    <div class="sub">Магазин номеров</div>
+
+    <input type="hidden" name="next" value="{{ next }}">
+
+    <div class="field">
+      <label for="login">Логин</label>
+      <input class="input" id="login" name="login" autocomplete="username" autofocus required>
+    </div>
+
+    <div class="field">
+      <label for="password">Пароль</label>
+      <input class="input" id="password" name="password" type="password"
+             autocomplete="current-password" required>
+    </div>
+
+    {% if error %}
+      <div class="note note--quiet" style="margin-bottom:12px">{{ error }}</div>
+    {% endif %}
+
+    <button class="btn btn--primary" type="submit" style="width:100%">Войти</button>
+  </form>
+  {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block h1 %}Обзор{% endblock %}
+{% block sub %}<div class="sub">Воронка, деньги и состояние заказов</div>{% endblock %}
+{% block meta %}обновлено при загрузке страницы{% endblock %}
+
+{% block content %}
+
+<div class="grid grid--4">
+  <div class="card stat">
+    <div class="k">Зашло всего</div>
+    <div class="v">{{ d.users_total | num }}</div>
+    <div class="d">сегодня {{ d.users_today | num }} · за 7 дней {{ d.users_week | num }}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Пополнили</div>
+    <div class="v">{{ d.users_paid | num }}</div>
+    <div class="d">{{ pct(d.users_paid, d.users_total) }} от зашедших</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Купили</div>
+    <div class="v">{{ d.users_bought | num }}</div>
+    <div class="d">{{ pct(d.users_bought, d.users_total) }} от зашедших</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Ограничены</div>
+    <div class="v">{{ d.users_banned | num }}</div>
+    <div class="d">баны и ограничения</div>
+  </div>
+</div>
+
+<div class="section-title">Деньги</div>
+<div class="grid grid--4">
+  <div class="card stat">
+    <div class="k">Пополнено</div>
+    <div class="v">{{ d.topup_total | money }}</div>
+    <div class="d">сегодня {{ d.topup_today | money }}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Продано</div>
+    <div class="v">{{ d.revenue_total | money }}</div>
+    <div class="d">сегодня {{ d.revenue_today | money }}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Маржа</div>
+    <div class="v">{{ d.margin_total | money }}</div>
+    <div class="d">закуп на LZT {{ d.cost_total | money }}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">На балансах</div>
+    <div class="v">{{ d.balance_hold | money }}</div>
+    <div class="d">средний чек {{ d.avg_check | money }}</div>
+  </div>
+</div>
+
+<div class="section-title">Заказы</div>
+<div class="grid grid--2">
+  <div class="card">
+    <div class="rows">
+      <div class="row"><span class="k">Всего</span><span class="v">{{ d.orders_total | num }}</span></div>
+      <div class="row"><span class="k">Сегодня</span><span class="v">{{ d.orders_today | num }}</span></div>
+      <div class="row"><span class="k">Состоялось</span><span class="v">{{ d.orders_paid | num }}</span></div>
+      <div class="row"><span class="k">Сбоев</span><span class="v">{{ d.orders_failed | num }}</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="rows">
+      {% if d.orders_by_status %}
+        {% for status, count in d.orders_by_status.items() %}
+          <div class="row">
+            <span class="k">{{ status | order_status }}</span>
+            <span class="v">{{ count | num }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="row"><span class="k">Заказов пока нет</span><span class="v">0</span></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="section-title">Требует внимания</div>
+<div class="grid grid--4">
+  <div class="card stat">
+    <div class="k">Открытые обращения</div>
+    <div class="v">{{ d.tickets_open | num }}</div>
+    <div class="d"><a class="link" href="/support">поддержка</a></div>
+  </div>
+  <div class="card stat">
+    <div class="k">Отзывы на модерации</div>
+    <div class="v">{{ d.reviews_pending | num }}</div>
+    <div class="d"><a class="link" href="/reviews">отзывы</a></div>
+  </div>
+  <div class="card stat">
+    <div class="k">Платежи в ожидании</div>
+    <div class="v">{{ d.payments_pending | num }}</div>
+    <div class="d"><a class="link" href="/payments">платежи</a></div>
+  </div>
+  <div class="card stat">
+    <div class="k">Ошибки за сутки</div>
+    <div class="v">{{ d.errors_24h | num }}</div>
+    <div class="d"><a class="link" href="/logs?level=error">логи</a></div>
+  </div>
+</div>
+
+<div class="section-title">Последние события</div>
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:88px">Время</th>
+        <th style="width:110px">Раздел</th>
+        <th style="width:150px">Событие</th>
+        <th>Сообщение</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in d.recent %}
+        <tr>
+          <td class="muted mono">{{ e.ts | time }}</td>
+          <td>
+            <span class="tag {% if e.level == 'error' %}tag--fill{% elif e.level == 'warn' %}tag--strong{% endif %}">
+              {{ e.section | section }}
+            </span>
+          </td>
+          <td class="mono">{{ e.event }}</td>
+          <td class="muted"><span class="clip">{{ e.message or "—" }}</span></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="empty">Событий пока нет. Появятся, когда запустится бот.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

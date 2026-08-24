@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block h1 %}Логи{% endblock %}
+{% block sub %}<div class="sub">Единый журнал бота, мини-аппа и админки</div>{% endblock %}
+{% block meta %}{{ total | num }} записей{% endblock %}
+
+{% block content %}
+
+<form class="bar" method="get" action="/logs">
+  <div class="field">
+    <label for="section">Раздел</label>
+    <select id="section" name="section">
+      <option value="">все</option>
+      {% for key, title in sections.items() %}
+        <option value="{{ key }}" {% if f.section == key %}selected{% endif %}>{{ title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="level">Уровень</label>
+    <select id="level" name="level">
+      <option value="">любой</option>
+      {% for lv in levels %}
+        <option value="{{ lv }}" {% if f.level == lv %}selected{% endif %}>{{ lv | level }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="event">Событие</label>
+    <input class="input" id="event" name="event" value="{{ f.event }}" placeholder="order_paid">
+  </div>
+
+  <div class="field">
+    <label for="user_id">ID клиента</label>
+    <input class="input" id="user_id" name="user_id" value="{{ f.user_id }}" style="width:110px">
+  </div>
+
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/logs">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:96px">Время</th>
+        <th style="width:104px">Раздел</th>
+        <th style="width:74px">Уровень</th>
+        <th style="width:160px">Событие</th>
+        <th style="width:150px">Клиент</th>
+        <th>Сообщение</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        {% set e = r.log %}
+        <tr>
+          <td class="muted mono nowrap">{{ e.ts | time }}</td>
+          <td><span class="tag">{{ e.section | section }}</span></td>
+          <td>
+            {% if e.level == 'error' %}
+              <span class="tag tag--fill">ошибка</span>
+            {% elif e.level == 'warn' %}
+              <span class="tag tag--strong">внимание</span>
+            {% else %}
+              <span class="muted">инфо</span>
+            {% endif %}
+          </td>
+          <td class="mono">{{ e.event }}</td>
+          <td class="muted">
+            {% if r.tg_id %}
+              {% if r.username %}@{{ r.username }}{% else %}<span class="mono">{{ r.tg_id }}</span>{% endif %}
+            {% else %}—{% endif %}
+          </td>
+          <td><span class="clip">{{ e.message or "—" }}</span></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Под фильтр ничего не попало.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&section=" ~ f.section ~ "&level=" ~ f.level ~ "&event=" ~ f.event ~ "&user_id=" ~ f.user_id %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/logs?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/logs?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block h1 %}Заказы{% endblock %}
+{% block sub %}<div class="sub">Покупки номеров: закупка, выдача кода, возвраты</div>{% endblock %}
+{% block meta %}{{ total | num }} заказов{% endblock %}
+
+{% block content %}
+
+<form class="bar" method="get" action="/orders">
+  <div class="field">
+    <label for="status">Статус</label>
+    <select id="status" name="status">
+      <option value="">любой</option>
+      {% for key, title in statuses.items() %}
+        <option value="{{ key }}" {% if f.status == key %}selected{% endif %}>{{ title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="offer">Страна</label>
+    <select id="offer" name="offer">
+      <option value="">все</option>
+      {% for code in codes %}
+        <option value="{{ code }}" {% if f.offer == code %}selected{% endif %}>{{ code }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="q">Номер, id заказа или лота</label>
+    <input class="input" id="q" name="q" value="{{ f.q }}" placeholder="628123 или 12">
+  </div>
+
+  <div class="field field--row" style="height:32px">
+    <input type="checkbox" id="stuck" name="stuck" value="1" {% if f.stuck %}checked{% endif %}>
+    <label for="stuck">только зависшие</label>
+  </div>
+
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/orders">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:54px">№</th>
+        <th style="width:96px">Время</th>
+        <th style="width:150px">Клиент</th>
+        <th>Страна</th>
+        <th style="width:140px">Номер</th>
+        <th class="num" style="width:88px">Цена</th>
+        <th class="num" style="width:88px">Закуп</th>
+        <th class="num" style="width:88px">Маржа</th>
+        <th style="width:104px">Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        {% set o = r.o %}
+        <tr>
+          <td><a class="link mono" href="/orders/{{ o.id }}">{{ o.id }}</a></td>
+          <td class="muted mono nowrap">{{ o.created_at | time }}</td>
+          <td class="muted">
+            {% if r.tg_id %}
+              <a class="link" href="/users/{{ o.user_id }}">{% if r.username %}@{{ r.username }}{% else %}{{ r.tg_id }}{% endif %}</a>
+            {% else %}—{% endif %}
+          </td>
+          <td>{{ o.offer_title }}</td>
+          <td class="mono">{{ o.phone or "—" }}</td>
+          <td class="num">{{ o.price | money }}</td>
+          <td class="num muted">{{ o.lzt_cost | money }}</td>
+          <td class="num">{{ o.margin | money }}</td>
+          <td>
+            {% if o.status in ('failed', 'refunded') %}
+              <span class="tag">{{ o.status | order_status }}</span>
+            {% elif o.status in ('new', 'searching', 'buying') %}
+              <span class="tag tag--strong">{{ o.status | order_status }}</span>
+            {% else %}
+              <span class="tag tag--fill">{{ o.status | order_status }}</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9" class="empty">Под фильтр ничего не попало.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&status=" ~ f.status ~ "&offer=" ~ f.offer ~ "&q=" ~ f.q ~ "&stuck=" ~ f.stuck %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/orders?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/orders?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

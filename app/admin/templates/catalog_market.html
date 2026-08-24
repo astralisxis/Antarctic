@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block h1 %}Страны маркета{% endblock %}
+{% block sub %}<div class="sub">Сколько лотов и по какой цене — чтобы страну в каталог выбирать по цифрам</div>{% endblock %}
+{% block meta %}<a class="link" href="/catalog">к каталогу</a>{% endblock %}
+
+{% block content %}
+
+<form class="bar" method="post" action="/catalog/market/scan">
+  <input type="hidden" name="only" value="{{ only }}">
+  <div class="field">
+    <label for="pmax">Потолок цены, ₽</label>
+    <input class="input" id="pmax" name="pmax" value="{{ scan.pmax_rub }}" placeholder="без потолка" style="width:120px">
+  </div>
+  <div class="field">
+    <label for="spam">Спам-блок</label>
+    <select id="spam" name="spam">
+      <option value="no" {% if scan.spam == 'no' %}selected{% endif %}>без спама</option>
+      <option value="nomatter" {% if scan.spam == 'nomatter' %}selected{% endif %}>не важно</option>
+      <option value="yes" {% if scan.spam == 'yes' %}selected{% endif %}>только со спамом</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="scope">Что обходить</label>
+    <select id="scope" name="scope">
+      <option value="all">все страны ({{ total_countries }})</option>
+      <option value="catalog">только те, что в каталоге</option>
+    </select>
+  </div>
+  <button class="btn btn--primary" type="submit" {% if scan.running %}disabled{% endif %}>Обойти маркет</button>
+  <a class="btn" href="/catalog/market?only={{ 'all' if only == 'lots' else 'lots' }}">
+    {% if only == 'lots' %}Показать все страны{% else %}Только с лотами{% endif %}
+  </a>
+</form>
+
+{% if scan.started_at %}
+  <div class="note note--quiet">
+    {% if scan.running %}
+      Обход идёт: {{ scan.done }} из {{ scan.total }} ({{ scan.percent }}%), сейчас {{ scan.code }}.
+      Обновите страницу через полминуты — <a class="link" href="/catalog/market?only={{ only }}">обновить</a>.
+    {% else %}
+      Последний обход: {{ scan.done }} из {{ scan.total }} стран, закончился {{ scan.finished_at | dt }}.
+      {% if scan.error %}Оборвался: {{ scan.error }}{% endif %}
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:56px">Код</th>
+        <th>Страна</th>
+        <th class="num" style="width:80px">Лотов</th>
+        <th class="num" style="width:96px">От</th>
+        <th class="num" style="width:110px">Средняя</th>
+        <th class="num" style="width:96px">До</th>
+        <th style="width:110px">Проверено</th>
+        <th style="width:210px">В каталоге</th>
+        <th style="width:110px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          <td class="mono">{{ r.code }}</td>
+          <td>{{ r.name }}</td>
+          <td class="num {% if not r.lots %}muted{% endif %}">{{ r.lots | num }}</td>
+          <td class="num">{{ r.stat.price_min | money if r.stat else "—" }}</td>
+          <td class="num">
+            {{ r.stat.price_avg | money if r.stat else "—" }}
+            {% if r.stat and r.stat.sample %}<div class="mono muted" style="font-size:11px">по {{ r.stat.sample }} лотам</div>{% endif %}
+          </td>
+          <td class="num muted">{{ r.stat.price_max | money if r.stat else "—" }}</td>
+          <td class="muted mono nowrap">
+            {{ r.stat.checked_at | time if r.stat else "—" }}
+            {% if r.stat and r.stat.error %}<div class="tag">ошибка</div>{% endif %}
+          </td>
+          <td>
+            {% if r.offer %}
+              <a class="link" href="/catalog/{{ r.offer.id }}">{{ r.offer.title }}</a>
+              <div class="muted mono" style="font-size:11px">
+                цена {{ r.offer.price | money }} · лимит {{ r.offer.buy_limit | money }}
+                {% if r.margin is not none %}· запас {{ r.margin | money }}{% endif %}
+              </div>
+            {% else %}
+              <a class="btn btn--sm" href="/catalog/new?code={{ r.code }}">Добавить</a>
+            {% endif %}
+          </td>
+          <td>
+            <form method="post" action="/catalog/market/{{ r.code }}">
+              <input type="hidden" name="only" value="{{ only }}">
+              <button class="btn btn--sm" type="submit">Проверить</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9" class="empty">
+          {% if scan.started_at %}
+            По этому фильтру лотов не нашлось ни в одной стране.
+          {% else %}
+            Обхода ещё не было. Нажмите «Обойти маркет» — это около минуты.
+          {% endif %}
+        </td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="hint" style="margin-top:10px">
+  «Средняя» — это средняя по первым {{ sample_limit }} самым дешёвым лотам страны, а не по всему
+  маркету: лоты приходят страницами от дешёвых, и вытягивать все страницы ради средней слишком
+  дорого. Рядом подписано, сколько лотов попало в выборку. «Лотов» — общее число по фильтру,
+  как его отдал маркет. «Запас» — цена витрины минус самый дешёвый лот.
+</div>
+
+{% endblock %}

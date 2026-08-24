@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block h1 %}Настройки{% endblock %}
+{% block sub %}<div class="sub">Тексты, проценты и переключатели разделов. Применяются сразу, без перезапуска</div>{% endblock %}
+{% block meta %}{{ groups | length }} групп{% endblock %}
+
+{% block content %}
+
+<form method="post" action="/settings">
+  <div class="grid grid--2">
+    {% for group, defs in groups.items() %}
+      <div class="card">
+        <div class="section-title" style="margin-top:0">{{ group }}</div>
+
+        {% for d in defs %}
+          {% if d.kind == "bool" %}
+            <div class="field field--row">
+              <input type="checkbox" id="{{ d.key }}" name="{{ d.key }}" value="1" {% if v[d.key] %}checked{% endif %}>
+              <label for="{{ d.key }}">{{ d.title }}</label>
+            </div>
+            {% if d.hint %}<div class="hint">{{ d.hint }}</div>{% endif %}
+          {% elif d.kind == "text" %}
+            <div class="field">
+              <label for="{{ d.key }}">{{ d.title }}</label>
+              <textarea id="{{ d.key }}" name="{{ d.key }}" rows="3">{{ v[d.key] }}</textarea>
+              {% if d.hint %}<div class="hint">{{ d.hint }}</div>{% endif %}
+            </div>
+          {% else %}
+            <div class="field">
+              <label for="{{ d.key }}">
+                {{ d.title }}{% if d.kind == "money" %}, ₽{% elif d.kind == "int" and d.key.endswith("percent") %}, %{% endif %}
+              </label>
+              <input class="input{% if d.kind == 'url' %} mono{% endif %}"
+                     id="{{ d.key }}" name="{{ d.key }}" value="{{ v[d.key] }}"
+                     {% if d.kind == "int" or d.kind == "money" %}style="width:140px"{% endif %}
+                     {% if d.kind == "url" %}placeholder="https://t.me/channel"{% endif %}>
+              {% if d.hint %}<div class="hint">{{ d.hint }}</div>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
+        <div class="hint mono">{% for d in defs %}{{ d.key }}{% if not loop.last %} · {% endif %}{% endfor %}</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="acts" style="margin-top:14px">
+    <button class="btn btn--primary" type="submit">Сохранить</button>
+    <a class="btn" href="/settings">Отменить правки</a>
+  </div>
+</form>
+
+<div class="section-title">Обслуживание</div>
+<div class="grid grid--2">
+  <div class="card">
+    <div class="strong">Блокировки по адресу</div>
+    <div class="hint" style="margin:4px 0 10px">
+      Десять неудачных входов подряд — и адрес в бане до снятия в панели.
+      {% if ip_stat.banned %}Сейчас в бане: {{ ip_stat.banned | num }}.
+      {% elif ip_stat.watching %}Забаненных нет, под счётом: {{ ip_stat.watching | num }}.
+      {% else %}Пароль пока никто не перебирал.{% endif %}
+    </div>
+    <a class="btn" href="/security/ip">Открыть список</a>
+  </div>
+
+  <div class="card">
+    <div class="strong">Обнуление данных</div>
+    <div class="hint" style="margin:4px 0 10px">
+      Стереть накопленное после тестов: заказы, платежи, отзывы, обращения,
+      рассылки, журнал. Каталог, настройки и админы остаются.
+    </div>
+    <a class="btn" href="/maintenance">Открыть</a>
+  </div>
+</div>
+
+{% endblock %}

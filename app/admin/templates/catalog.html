@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block h1 %}Каталог{% endblock %}
+{% block sub %}<div class="sub">Страна — это товар: цена своя, лот подбирается в пределах лимита</div>{% endblock %}
+{% block meta %}{{ rows | length }} позиций{% endblock %}
+
+{% block content %}
+
+<div class="acts" style="margin-bottom:12px">
+  <a class="btn btn--primary" href="/catalog/new">Добавить страну</a>
+  <a class="btn" href="/catalog/market">Страны маркета</a>
+  <form method="post" action="/catalog/refresh"><button class="btn" type="submit">Обновить наличие</button></form>
+</div>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Страна</th>
+        <th style="width:64px">Код</th>
+        <th style="width:72px">LZT</th>
+        <th class="num" style="width:96px">Цена</th>
+        <th class="num" style="width:104px">Лимит закупки</th>
+        <th class="num" style="width:96px">Маржа мин.</th>
+        <th style="width:150px">Наличие</th>
+        <th class="num" style="width:70px">Продано</th>
+        <th style="width:260px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          <td class="strong">
+            <a class="link" href="/catalog/{{ r.o.id }}">{{ r.o.title }}</a>
+            {% if not r.o.is_active %}<span class="tag" style="margin-left:6px">скрыта</span>{% endif %}
+          </td>
+          <td class="mono">{{ r.o.code }}</td>
+          <td class="mono">{{ r.o.lzt_country }}</td>
+          <td class="num">{{ r.o.price | money }}</td>
+          <td class="num muted">{{ r.o.buy_limit | money }}</td>
+          <td class="num">{{ r.margin | money }}</td>
+          <td class="muted">
+            {{ r.stock }}
+            {% if r.o.stock_checked_at %}<div class="mono muted">{{ r.o.stock_checked_at | time }}</div>{% endif %}
+          </td>
+          <td class="num muted">{{ r.sold | num }}</td>
+          <td>
+            <div class="acts">
+              <a class="btn btn--sm" href="/catalog/{{ r.o.id }}">Изменить</a>
+              <form method="post" action="/catalog/{{ r.o.id }}/refresh">
+                <button class="btn btn--sm" type="submit">Наличие</button>
+              </form>
+              <form method="post" action="/catalog/{{ r.o.id }}/toggle">
+                <button class="btn btn--sm" type="submit">{% if r.o.is_active %}Скрыть{% else %}Открыть{% endif %}</button>
+              </form>
+              <a class="btn btn--sm" href="/catalog/{{ r.o.id }}/delete">Удалить</a>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9" class="empty">Стран пока нет. Добавьте первую — витрина заполнится сразу.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

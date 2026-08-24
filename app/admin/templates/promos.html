@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block h1 %}Промокоды{% endblock %}
+{% block sub %}<div class="sub">Бонус на баланс, лимит и срок активации</div>{% endblock %}
+{% block meta %}{{ rows | length }} кодов{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom:12px">
+  <div class="section-title" style="margin-top:0">Новый промокод</div>
+  <form method="post" action="/promos">
+    <div class="bar">
+      <div class="field"><label for="promo-code">Код</label><input class="input mono" id="promo-code" name="code" maxlength="32" placeholder="ANTARCTIC500" required></div>
+      <div class="field" style="min-width:220px;flex:1"><label for="promo-title">Описание</label><input class="input" id="promo-title" name="title" maxlength="120" placeholder="Бонус новым клиентам"></div>
+      <div class="field"><label for="promo-bonus">Бонус, ₽</label><input class="input" id="promo-bonus" name="bonus" inputmode="decimal" placeholder="500" required></div>
+      <div class="field"><label for="promo-limit">Активаций</label><input class="input" id="promo-limit" name="max_uses" type="number" min="1" placeholder="без лимита"></div>
+      <div class="field"><label for="promo-expire">Действует до</label><input class="input" id="promo-expire" name="expires_at" type="datetime-local"></div>
+    </div>
+    <div class="acts" style="margin-top:12px"><button class="btn btn--primary" type="submit">Создать промокод</button></div>
+  </form>
+</div>
+
+<div class="panel">
+  <table class="table">
+    <thead><tr><th>Код</th><th>Описание</th><th>Бонус</th><th>Активации</th><th>Срок</th><th>Статус</th><th></th></tr></thead>
+    <tbody>
+    {% for p in rows %}
+      <tr>
+        <td class="mono strong">{{ p.code }}</td>
+        <td>{{ p.title or '—' }}</td>
+        <td class="nowrap">{{ p.bonus | money }}</td>
+        <td class="mono nowrap">{{ p.uses_count | num }}{% if p.max_uses %} / {{ p.max_uses | num }}{% else %} / ∞{% endif %}</td>
+        <td class="muted nowrap">{{ p.expires_at | dt }}</td>
+        <td><span class="tag{% if p.is_active %} tag--fill{% endif %}">{{ 'активен' if p.is_active else 'выключен' }}</span></td>
+        <td><form method="post" action="/promos/{{ p.id }}/toggle"><button class="btn" type="submit">{{ 'Выключить' if p.is_active else 'Включить' }}</button></form></td>
+      </tr>
+    {% else %}<tr><td colspan="7" class="empty">Промокодов пока нет.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

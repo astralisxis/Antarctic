@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block h1 %}Платежи{% endblock %}
+{% block sub %}<div class="sub">Пополнения по провайдерам: сверка, ручное зачисление, снятие счёта</div>{% endblock %}
+{% block meta %}{{ total | num }} счётов · зачислено {{ credited | money }}{% endblock %}
+
+{% block content %}
+
+<div class="acts" style="margin-bottom:12px">
+  <form method="post" action="/payments/poll"><button class="btn btn--primary" type="submit">Сверить ожидающие</button></form>
+  {% if ways %}
+    <span class="muted">Подключено: {{ ways.values() | join(", ") }}</span>
+  {% else %}
+    <span class="muted">Ни один провайдер не подключён — счёта не выставляются.</span>
+  {% endif %}
+</div>
+
+<form class="bar" method="get" action="/payments">
+  <div class="field">
+    <label for="status">Статус</label>
+    <select id="status" name="status">
+      <option value="">любой</option>
+      {% for key, title in statuses.items() %}
+        <option value="{{ key }}" {% if f.status == key %}selected{% endif %}>{{ title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="provider">Провайдер</label>
+    <select id="provider" name="provider">
+      <option value="">любой</option>
+      {% for key, title in providers.items() %}
+        <option value="{{ key }}" {% if f.provider == key %}selected{% endif %}>{{ title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="q">Счёт, клиент или id у провайдера</label>
+    <input class="input" id="q" name="q" value="{{ f.q }}" placeholder="12, @nick или 8f3c…">
+  </div>
+
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/payments">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:54px">№</th>
+        <th style="width:96px">Время</th>
+        <th style="width:150px">Клиент</th>
+        <th style="width:104px">Провайдер</th>
+        <th class="num" style="width:88px">Сумма</th>
+        <th style="width:130px">К оплате</th>
+        <th style="width:120px">Статус</th>
+        <th style="width:230px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        {% set p = r.p %}
+        <tr>
+          <td class="mono">{{ p.id }}</td>
+          <td class="muted mono nowrap">{{ (p.paid_at or p.created_at) | time }}</td>
+          <td class="muted">
+            {% if r.tg_id %}
+              <a class="link" href="/users/{{ p.user_id }}">{% if r.username %}@{{ r.username }}{% else %}{{ r.tg_id }}{% endif %}</a>
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {{ p.provider | provider }}
+            {% if p.external_id %}<div class="mono muted" style="font-size:11px">{{ p.external_id }}</div>{% endif %}
+          </td>
+          <td class="num">{{ (p.credited or p.amount) | money }}</td>
+          <td class="mono muted">
+            {% if p.raw and p.raw.charge and p.asset and p.asset != 'RUB' %}
+              {{ p.raw.charge }} {{ p.asset }}
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {% if p.status == 'paid' %}
+              <span class="tag tag--fill">{{ p.status | pay_status }}</span>
+            {% elif p.status == 'pending' %}
+              <span class="tag tag--strong">{{ p.status | pay_status }}</span>
+            {% else %}
+              <span class="tag">{{ p.status | pay_status }}</span>
+            {% endif %}
+            {% if p.status == 'pending' and p.expires_at %}
+              <div class="mono muted" style="font-size:11px">до {{ p.expires_at | time }}</div>
+            {% endif %}
+          </td>
+          <td>
+            {% if p.status == 'pending' %}
+              <div class="acts">
+                <form method="post" action="/payments/{{ p.id }}/check">
+                  <button class="btn btn--sm" type="submit">Проверить</button>
+                </form>
+                <form method="post" action="/payments/{{ p.id }}/credit"
+                      onsubmit="return confirm('Зачислить {{ p.amount | money }} без подтверждения от провайдера?')">
+                  <button class="btn btn--sm" type="submit">Зачислить</button>
+                </form>
+                <form method="post" action="/payments/{{ p.id }}/expire"
+                      onsubmit="return confirm('Снять счёт №{{ p.id }}? Оплатить его будет нельзя.')">
+                  <button class="btn btn--sm" type="submit">Снять</button>
+                </form>
+              </div>
+            {% elif p.invoice_url %}
+              <a class="link" href="{{ p.invoice_url }}" target="_blank" rel="noopener">счёт у провайдера</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="empty">Под фильтр ничего не попало.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&status=" ~ f.status ~ "&provider=" ~ f.provider ~ "&q=" ~ f.q %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/payments?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/payments?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+<div class="hint" style="margin-top:10px">
+  «Проверить» спрашивает провайдера про один счёт, «Сверить ожидающие» — про все.
+  «Зачислить» ставит оплату вручную: баланс изменится сразу, но сообщение в Telegram
+  из админки не уходит — клиент увидит деньги в профиле.
+</div>
+
+{% endblock %}

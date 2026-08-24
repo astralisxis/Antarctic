@@ -1,0 +1,39 @@
+# Проверено на Python 3.14.3 (Windows) 19.08.2026. setup.cmd ставит
+# setuptools/wheel перед зависимостями: Telethon подтягивает чисто-Python pyaes.
+# Версии зафиксированы: стек не меняем на ходу.
+
+# Боты
+aiogram==3.30.0
+# SOCKS5-прокси для aiohttp: без него BOT_PROXY=socks5://... не работает
+aiohttp-socks==0.10.1
+
+# Веб: админка, мини-апп, вебхуки
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+jinja2==3.1.6
+python-multipart==0.0.20
+itsdangerous==2.2.0
+
+# База
+sqlalchemy[asyncio]==2.0.52
+aiosqlite==0.22.1
+alembic==1.19.1
+
+# Конфиг и HTTP
+pydantic-settings==2.15.0
+httpx==0.28.1
+
+# База часовых поясов: на Windows её в системе нет, ZoneInfo("Europe/Moscow") без неё падает
+tzdata==2026.3
+
+# Postgres — понадобится при переезде с локальной sqlite
+# asyncpg==0.30.0
+
+# Картинка отзыва для канала: карточка рисуется по шаблону
+pillow==11.3.0
+
+# Вход в купленный Telegram-аккаунт по Auth Key + DC ID (сессия только в памяти)
+Telethon==1.42.0
+
+# Кэш поиска лотов, FSM, антифрод — итерация с магазином
+# redis==6.4.0

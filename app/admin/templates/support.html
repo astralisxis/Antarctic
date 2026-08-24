@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block h1 %}Поддержка{% endblock %}
+{% block sub %}<div class="sub">Обращения из бота поддержки</div>{% endblock %}
+{% block meta %}{{ stats.total | num }} обращений{% if stats.queued %} · {{ stats.queued }} ответов в очереди{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="acts" style="margin-bottom:12px">
+  <span class="muted">Часы работы: {{ hours }}</span>
+  <span class="muted">Ответы клиентам отправляет бот поддержки — он должен быть запущен.</span>
+</div>
+
+<form class="bar" method="get" action="/support">
+  <div class="field">
+    <label for="status">Статус</label>
+    <select id="status" name="status">
+      <option value="">любой</option>
+      {% for key, title in statuses.items() %}
+        <option value="{{ key }}" {% if f.status == key %}selected{% endif %}>{{ title }} — {{ stats.get(key, 0) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="q">Обращение, клиент или тема</label>
+    <input class="input" id="q" name="q" value="{{ f.q }}" placeholder="12, @nick или «не приходит код»">
+  </div>
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/support">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:54px">№</th>
+        <th style="width:96px">Сообщение</th>
+        <th style="width:170px">Клиент</th>
+        <th>Тема</th>
+        <th style="width:130px">Статус</th>
+        <th style="width:190px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        {% set t = row.t %}
+        <tr>
+          <td class="mono">{{ t.id }}</td>
+          <td class="muted mono nowrap">{{ (t.last_message_at or t.created_at) | time }}</td>
+          <td class="muted">
+            {% if admin.role == 'support' %}
+              {% if row.u.username %}@{{ row.u.username }}{% else %}{{ row.u.tg_id }}{% endif %}
+            {% else %}
+              <a class="link" href="/users/{{ row.u.id }}">{% if row.u.username %}@{{ row.u.username }}{% else %}{{ row.u.tg_id }}{% endif %}</a>
+            {% endif %}
+          </td>
+          <td>
+            {{ t.subject or "— без темы —" }}
+            {% if t.order_id %}<div class="muted" style="font-size:11px">заказ №{{ t.order_id }}</div>{% endif %}
+          </td>
+          <td>
+            {% if t.status == 'open' %}
+              <span class="tag tag--strong">{{ t.status | ticket_status }}</span>
+              {% if t.unread_admin %}<span class="tag tag--fill">{{ t.unread_admin }}</span>{% endif %}
+            {% else %}
+              <span class="tag">{{ t.status | ticket_status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="acts">
+              <a class="btn btn--sm" href="/support/{{ t.id }}">Открыть</a>
+              {% if t.status == 'closed' %}
+                <form method="post" action="/support/{{ t.id }}/reopen">
+                  <input type="hidden" name="back" value="list">
+                  <button class="btn btn--sm" type="submit">Вернуть в работу</button>
+                </form>
+              {% else %}
+                <form method="post" action="/support/{{ t.id }}/close">
+                  <input type="hidden" name="back" value="list">
+                  <button class="btn btn--sm" type="submit">Закрыть</button>
+                </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Обращений нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&status=" ~ f.status ~ "&q=" ~ f.q %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/support?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/support?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

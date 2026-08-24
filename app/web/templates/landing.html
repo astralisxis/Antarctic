@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>Antarctic — физические номера для Telegram</title>
+  <link rel="stylesheet" href="/static/web.css?v=4">
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body class="landing-page">
+  <header class="landing-header">
+    <a class="brand" href="/" aria-label="Antarctic Shop"><span class="brand-mark">A</span><span>ANTARCTIC</span></a>
+    <a class="header-link" href="/login">Войти <i data-lucide="log-in"></i></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__wash" aria-hidden="true"></div>
+      <div class="hero__content">
+        <p class="hero__eyebrow reveal reveal--1"><i data-lucide="badge-check"></i> Автовыдача аккаунтов и кодов</p>
+        <h1 class="reveal reveal--2">Физические номера<br><span>для Telegram</span></h1>
+        <p class="hero__lead reveal reveal--3">Мгновенная выдача, получение кода и гарантия замены — всё необходимое в одном магазине.</p>
+        <div class="hero__actions reveal reveal--4">
+          <a class="primary-action" href="/login">Начать покупки <i data-lucide="arrow-right"></i></a>
+          <a class="secondary-action" href="/shop">Каталог</a>
+        </div>
+        <div class="stats-strip reveal" aria-label="Статистика магазина">
+          <div><strong>{{ stats.buyers }}</strong><span>покупателей</span></div>
+          <div><strong>{{ stats.sold }}</strong><span>аккаунтов продано</span></div>
+          <div><strong>{{ stats.offers_count }}</strong><span>лотов на витрине</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section features-grid">
+      <article class="feature-card reveal">
+        <div class="feature-icon" aria-hidden="true"><i data-lucide="zap"></i></div>
+        <h3>Мгновенная выдача</h3>
+        <p>Автодоставка — получение кода за секунды после покупки.</p>
+      </article>
+      <article class="feature-card reveal">
+        <div class="feature-icon" aria-hidden="true"><i data-lucide="shield-check"></i></div>
+        <h3>Гарантия на товары</h3>
+        <p>Заменим товар в случае неполадок в течение срока гарантии.</p>
+      </article>
+      <article class="feature-card reveal">
+        <div class="feature-icon" aria-hidden="true"><i data-lucide="bot"></i></div>
+        <h3>Полный контроль</h3>
+        <p>Коды, сессии и замены — всё доступно в пару кликов.</p>
+      </article>
+    </section>
+
+  </main>
+
+  <footer class="landing-footer"><span>ANTARCTIC SHOP</span><span>Telegram · 2026</span></footer>
+  <script>const observer=new IntersectionObserver(items=>items.forEach(item=>item.isIntersecting&&item.target.classList.add('is-visible')),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));window.addEventListener('DOMContentLoaded',()=>window.lucide?.createIcons());</script>
+</body>
+</html>

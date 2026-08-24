@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block h1 %}Отзывы{% endblock %}
+{% block sub %}<div class="sub">Проверка и публикация карточек в канал</div>{% endblock %}
+{% block meta %}{{ stats.total | num }} отзывов{% if stats.waiting %} · {{ stats.waiting }} ждут отправки{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="acts" style="margin-bottom:12px">
+  {% if not on %}
+    <span class="muted">Сбор отзывов выключен в настройках — кнопка в боте не показывается.</span>
+  {% elif not channel %}
+    <span class="muted">Канал не задан: заполните «Канал отзывов для публикации» в настройках, иначе карточки будут ждать.</span>
+  {% else %}
+    <span class="muted">
+      Канал: <span class="mono">{{ channel }}</span>{% if auto %} · отзывы уходят сразу{% else %} · только после проверки{% endif %}
+    </span>
+  {% endif %}
+  {% if channel_url %}<a class="link" href="{{ channel_url }}" target="_blank" rel="noopener">открыть канал</a>{% endif %}
+</div>
+
+<div class="panel" style="margin-bottom:12px">
+  <div class="section-title" style="margin-top:0">Шаблон карточки</div>
+
+  {% if not can_draw %}
+    <div class="note note--quiet">
+      Рисовать нечем: пакета Pillow нет в окружении. Поставьте зависимости
+      (<span class="mono">scripts\setup.cmd</span>) — до этого отзывы уходят
+      аватаркой с подписью текстом.
+    </div>
+  {% else %}
+    <div class="acts" style="margin-bottom:10px">
+      <span class="muted">
+        {% if as_image %}Отзывы уходят картинкой по шаблону{% else %}Картинка выключена в настройках — уходит аватарка с подписью{% endif %}
+        · шрифт: <span class="mono">{{ font }}</span>
+      </span>
+      <a class="link" href="/settings#reviews.card_image">настройки отзывов</a>
+    </div>
+
+    <img src="/reviews/card.png" alt="предпросмотр карточки отзыва"
+         style="width:100%;max-width:640px;display:block;border:1px solid #D9D9D9">
+
+    <form class="bar" method="post" action="/reviews/background" enctype="multipart/form-data" style="margin-top:10px">
+      <div class="field">
+        <label for="picture">Фон карточки</label>
+        <input class="input" id="picture" type="file" name="picture" accept="image/*" required>
+      </div>
+      <button class="btn btn--primary" type="submit">Загрузить фон</button>
+      {% if bg_ready %}<a class="btn" href="/reviews/background/delete">Убрать фон</a>{% endif %}
+    </form>
+
+    <div class="hint">
+      Файл: <span class="mono">{{ bg_path }}</span>{% if not bg_ready %} — пока нет, карточка светлая{% endif %}.
+      Обрезается по центру под пропорцию 1280×520, поэтому годится широкая
+      фотография. На тёмном фоне буквы становятся светлыми сами.
+    </div>
+  {% endif %}
+</div>
+
+<div class="panel" style="margin-bottom:12px">
+  <div class="section-title" style="margin-top:0">Тестовый отзыв в канал</div>
+
+  <form method="post" action="/reviews/test">
+    <div class="bar">
+      <div class="field">
+        <label for="t-name">Ник</label>
+        <input class="input" id="t-name" name="name" value="markin" maxlength="64" required
+               style="width:150px">
+      </div>
+      <div class="field">
+        <label for="t-stars">Оценка</label>
+        <select id="t-stars" name="stars">
+          {% for value in [5, 4, 3, 2, 1] %}
+            <option value="{{ value }}">{{ value | stars }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="t-product">Товар</label>
+        <input class="input" id="t-product" name="product" value="Индия +91" maxlength="120"
+               style="width:170px">
+      </div>
+      <button class="btn btn--primary" type="submit" {% if not channel %}disabled{% endif %}>
+        Отправить в канал
+      </button>
+    </div>
+    <div class="field" style="margin-top:8px;max-width:640px">
+      <label for="t-text">Текст</label>
+      <textarea id="t-text" name="text" rows="2" maxlength="500">Номер пришёл сразу, код получил через минуту. Всё честно.</textarea>
+    </div>
+  </form>
+
+  <div class="hint">
+    Уходит тем же путём, что настоящий отзыв, — в канале видно ровно то, что
+    увидит покупатель. Ник маскируется звёздочками, аватарки у тестового нет:
+    вместо неё круг с первой буквой. Способ отправки берётся из настроек: снимите
+    «Публиковать карточкой-картинкой», чтобы посмотреть текстовый вид.
+    {% if not channel %}Канал не задан — отправлять пока некуда.{% endif %}
+    Такие отзывы помечены в списке и удаляются кнопкой «Удалить».
+  </div>
+</div>
+
+<form class="bar" method="get" action="/reviews">
+  <div class="field">
+    <label for="status">Статус</label>
+    <select id="status" name="status">
+      <option value="">любой</option>
+      {% for key, title in statuses.items() %}
+        <option value="{{ key }}" {% if f.status == key %}selected{% endif %}>{{ title }} — {{ stats.get(key, 0) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/reviews">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:54px">№</th>
+        <th style="width:96px">Время</th>
+        <th style="width:150px">Клиент</th>
+        <th style="width:90px">Оценка</th>
+        <th>Текст</th>
+        <th style="width:130px">Статус</th>
+        <th style="width:270px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        {% set r = row.r %}
+        <tr>
+          <td class="mono">{{ r.id }}</td>
+          <td class="muted mono nowrap">{{ r.created_at | time }}</td>
+          <td class="muted">
+            {% if row.u %}
+              <a class="link" href="/users/{{ row.u.id }}">{% if row.u.username %}@{{ row.u.username }}{% else %}{{ row.u.tg_id }}{% endif %}</a>
+              <div class="mono muted" style="font-size:11px">в канале: {{ row.name }}</div>
+            {% else %}
+              <span class="tag">тестовый</span>
+              <div class="mono muted" style="font-size:11px">в канале: {{ row.name }}</div>
+            {% endif %}
+          </td>
+          <td class="mono nowrap">{{ r.stars | stars }}</td>
+          <td>
+            {{ r.text or "— без текста —" }}
+            {% if row.product %}<div class="muted" style="font-size:11px">{{ row.product }}{% if r.order_id %} · <a class="link" href="/orders/{{ r.order_id }}">заказ №{{ r.order_id }}</a>{% endif %}</div>{% endif %}
+            {% if r.reject_reason %}<div class="muted" style="font-size:11px">причина: {{ r.reject_reason }}</div>{% endif %}
+          </td>
+          <td>
+            {% if r.status == 'published' and r.channel_message_id %}
+              <span class="tag tag--fill">в канале</span>
+            {% elif r.status == 'published' %}
+              <span class="tag tag--strong">ждёт отправки</span>
+            {% elif r.status == 'pending' %}
+              <span class="tag tag--strong">{{ r.status | review_status }}</span>
+            {% else %}
+              <span class="tag">{{ r.status | review_status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if r.status != 'published' %}
+              <div class="acts">
+                <form method="post" action="/reviews/{{ r.id }}/approve">
+                  <button class="btn btn--sm btn--primary" type="submit">В канал</button>
+                </form>
+                <form class="acts" method="post" action="/reviews/{{ r.id }}/reject">
+                  <input class="input" name="reason" placeholder="причина" style="width:120px">
+                  <button class="btn btn--sm" type="submit">Отклонить</button>
+                </form>
+              </div>
+            {% elif r.channel_message_id %}
+              <span class="muted mono">сообщение {{ r.channel_message_id }}</span>
+            {% endif %}
+            {% if can_draw or not row.u %}
+              <div class="acts" style="margin-top:4px">
+                {% if can_draw %}
+                  <a class="link" href="/reviews/{{ r.id }}/card.png" target="_blank" rel="noopener">карточка</a>
+                {% endif %}
+                {% if not row.u %}
+                  <a class="link" href="/reviews/{{ r.id }}/delete">удалить</a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="empty">Отзывов пока нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&status=" ~ f.status %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/reviews?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/reviews?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+<div class="hint" style="margin-top:10px">
+  В канал карточку отправляет бот, а не админка: у панели нет сессии Telegram.
+  «В канал» ставит статус, дальше отзыв уходит в течение минуты. Уже опубликованный
+  отзыв отклонить нельзя — сначала удалите сообщение в канале руками.
+</div>
+
+{% endblock %}

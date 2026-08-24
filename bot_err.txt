@@ -1,0 +1,5 @@
+[lzt] buy_failed user=1 лот 9002 за 12,50 ₽: Item already sold
+[shop] order_failed user=1 Item already sold
+[payment] invoice_failed user=1 Crypto Bot: Crypto Bot: сеть недоступна (заглушка)
+счёт cryptobot не создан: Crypto Bot: сеть недоступна (заглушка)
+битая разметка приветствия: Telegram server says - Bad Request: can't parse entities: Unmatched '<'

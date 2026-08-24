@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block h1 %}Рассылка №{{ b.id }}{% endblock %}
+{% block sub %}<div class="sub">{{ b.title or "Без внутреннего названия" }}</div>{% endblock %}
+{% block meta %}{{ statuses.get(b.status, b.status) }}{% endblock %}
+
+{% block content %}
+<div class="acts" style="margin-bottom:12px">
+  <a class="btn" href="/broadcasts">К списку</a>
+  {% if b.status == 'draft' %}
+    <form method="post" action="/broadcasts/{{ b.id }}/start">
+      <button class="btn btn--primary" type="submit">Запустить рассылку</button>
+    </form>
+  {% endif %}
+  {% if b.status in ['draft', 'sending', 'paused'] %}
+    <form method="post" action="/broadcasts/{{ b.id }}/cancel">
+      <button class="btn" type="submit">Отменить</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="grid grid--4" style="margin-bottom:12px">
+  <div class="card stat"><div class="v">{{ b.total | num }}</div><div class="k">получателей</div></div>
+  <div class="card stat"><div class="v">{{ b.sent | num }}</div><div class="k">доставлено</div></div>
+  <div class="card stat"><div class="v">{{ b.failed | num }}</div><div class="k">не дошло</div></div>
+  <div class="card stat"><div class="v">{{ b.blocked | num }}</div><div class="k">заблокировали бота</div></div>
+</div>
+
+<div class="grid grid--2">
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Сообщение</div>
+    <dl class="kv">
+      <dt>Аудитория</dt><dd>{{ audiences.get(b.audience, b.audience) }}</dd>
+      <dt>Статус</dt><dd>{{ statuses.get(b.status, b.status) }}</dd>
+      <dt>Начало</dt><dd class="mono">{{ b.started_at | dt }}</dd>
+      <dt>Завершение</dt><dd class="mono">{{ b.finished_at | dt }}</dd>
+    </dl>
+    <div class="section-title">Текст</div>
+    <div style="white-space:pre-wrap;overflow-wrap:anywhere">{{ b.text }}</div>
+    {% if b.image_path %}<div class="hint">Картинка: <span class="mono">{{ b.image_path }}</span></div>{% endif %}
+    {% if b.buttons %}
+      <div class="section-title">Кнопки</div>
+      {% for button in b.buttons %}
+        <div><a class="link" href="{{ button.url }}" target="_blank" rel="noopener">{{ button.text }}</a></div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Ход отправки</div>
+    {% if b.status == 'draft' %}
+      <div class="note note--quiet">Получатели ещё не зафиксированы. После запуска в очередь попадут клиенты, которые сейчас входят в выбранную аудиторию.</div>
+    {% elif b.status == 'sending' %}
+      <div class="note note--quiet">Основной бот забирает очередь в фоне. Страница показывает сохранённую статистику; обновите её, чтобы увидеть свежие числа.</div>
+    {% elif b.status == 'cancelled' %}
+      <div class="note note--quiet">Оставшаяся очередь остановлена. Уже отправленные сообщения не удаляются.</div>
+    {% endif %}
+    {% if b.error %}<div class="hint">Последняя временная ошибка: {{ b.error }}</div>{% endif %}
+    <div class="acts" style="margin-top:10px"><a class="btn" href="/broadcasts/{{ b.id }}">Обновить</a></div>
+  </div>
+</div>
+
+{% if errors %}
+<div class="section-title">Последние ошибки доставки</div>
+<div class="panel">
+  <table class="table">
+    <thead><tr><th style="width:150px">Клиент</th><th style="width:130px">Статус</th><th>Причина</th><th style="width:110px">Время</th></tr></thead>
+    <tbody>
+      {% for delivery, user in errors %}
+        <tr>
+          <td><a class="link" href="/users/{{ user.id }}">{{ user.display_name }}</a><div class="mono muted">{{ user.tg_id }}</div></td>
+          <td>{{ delivery_statuses.get(delivery.status, delivery.status) }}</td>
+          <td class="muted">{{ delivery.error or "—" }}</td>
+          <td class="mono muted nowrap">{{ delivery.sent_at | time }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

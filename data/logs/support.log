@@ -1,0 +1,1224 @@
+2026-08-20 22:34:02,471 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-20 22:34:04,581 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-20 22:34:04,789 INFO    events         [system] support_bot_started user=None 
+2026-08-20 22:34:04,986 INFO    aiogram.dispatcher Start polling
+2026-08-20 22:34:05,151 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-20 22:34:05,655 INFO    events         [support] bot_start user=1 
+2026-08-20 22:34:07,995 INFO    aiogram.event  Update id=767473771 is handled. Duration 2587 ms by bot id=8899411808
+2026-08-20 22:34:08,028 INFO    events         [support] bot_start user=1 
+2026-08-20 22:34:08,486 INFO    aiogram.event  Update id=767473778 is handled. Duration 2938 ms by bot id=8899411808
+2026-08-20 22:34:08,499 INFO    events         [support] bot_start user=1 
+2026-08-20 22:34:08,821 INFO    aiogram.event  Update id=767473773 is handled. Duration 3377 ms by bot id=8899411808
+2026-08-20 22:34:08,991 INFO    events         [support] ticket_opened user=1 обращение №1
+2026-08-20 22:34:08,994 INFO    events         [support] user_message user=1 обращение №1: привет
+2026-08-20 22:34:09,237 INFO    events         [support] bot_start user=1 
+2026-08-20 22:34:09,842 INFO    aiogram.event  Update id=767473776 is handled. Duration 4321 ms by bot id=8899411808
+2026-08-20 22:34:11,439 INFO    aiogram.event  Update id=767473772 is handled. Duration 6012 ms by bot id=8899411808
+2026-08-20 22:34:11,709 INFO    events         [support] bot_start user=1 
+2026-08-20 22:34:11,956 INFO    aiogram.event  Update id=767473774 is handled. Duration 6497 ms by bot id=8899411808
+2026-08-20 22:34:12,071 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 33, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 47, in __call__
+    user, created = await users.touch(
+                    ^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\tg bot\app\services\users.py", line 155, in touch
+    await session.flush()
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 786, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 86, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 913, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.760071', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:12,221 ERROR   events         [support] bot_error user=None OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.760071', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:12,251 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 33, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 47, in __call__
+    user, created = await users.touch(
+                    ^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\tg bot\app\services\users.py", line 155, in touch
+    await session.flush()
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 786, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 86, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 913, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.753608', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:12,354 ERROR   events         [support] bot_error user=None OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.753608', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:12,372 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 33, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 47, in __call__
+    user, created = await users.touch(
+                    ^^^^^^^^^^^^^^^^^^
+    ...<8 lines>...
+    )
+    ^
+  File "C:\tg bot\app\services\users.py", line 155, in touch
+    await session.flush()
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 786, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4353, in flush
+    self._flush(objects)
+    ~~~~~~~~~~~^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4449, in _flush
+    flush_context.execute()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 465, in execute
+    rec.execute(self)
+    ~~~~~~~~~~~^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 641, in execute
+    util.preloaded.orm_persistence.save_obj(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.mapper,
+        ^^^^^^^^^^^^
+        uow.states_for_mapper_hierarchy(self.mapper, False, False),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        uow,
+        ^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 86, in save_obj
+    _emit_update_statements(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        base_mapper,
+        ^^^^^^^^^^^^
+    ...<3 lines>...
+        update,
+        ^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 913, in _emit_update_statements
+    c = connection.execute(
+        statement, multiparams, execution_options=execution_options
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 213, in execute
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 373, in _handle_exception
+    raise error
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py", line 195, in execute
+    self.await_(_cursor.execute(operation, parameters))
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiosqlite\core.py", line 63, in _connection_worker_thread
+    result = function()
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.756306', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:12,520 ERROR   events         [support] bot_error user=None OperationalError: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE users SET last_seen_at=? WHERE users.id = ?]
+[parameters: ('2026-08-20 12:34:05.756306', 1)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-20 22:34:13,750 INFO    aiogram.event  Update id=767473775 is handled. Duration 8259 ms by bot id=8899411808
+2026-08-20 22:34:13,762 INFO    aiogram.event  Update id=767473779 is handled. Duration 8199 ms by bot id=8899411808
+2026-08-20 22:34:13,873 INFO    aiogram.event  Update id=767473777 is handled. Duration 8332 ms by bot id=8899411808
+2026-08-20 22:34:34,546 INFO    events         [support] user_message user=1 обращение №1: приветик
+2026-08-20 22:34:34,838 INFO    aiogram.event  Update id=767473780 is handled. Duration 309 ms by bot id=8899411808
+2026-08-20 23:19:04,797 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-20 23:19:06,375 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-20 23:19:06,565 INFO    events         [system] support_bot_started user=None 
+2026-08-20 23:19:06,591 INFO    aiogram.dispatcher Start polling
+2026-08-20 23:19:06,761 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-20 23:24:37,324 INFO    events         [support] user_message user=1 обращение №1: здравствейте
+2026-08-20 23:24:39,041 INFO    aiogram.event  Update id=767473781 is handled. Duration 1899 ms by bot id=8899411808
+2026-08-20 23:25:44,336 INFO    events         [support] user_message user=1 обращение №1: photo
+2026-08-20 23:25:44,628 INFO    aiogram.event  Update id=767473782 is handled. Duration 373 ms by bot id=8899411808
+2026-08-20 23:26:49,642 INFO    aiogram.event  Update id=767473783 is handled. Duration 220 ms by bot id=8899411808
+2026-08-20 23:34:50,638 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-20 23:34:52,604 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-20 23:34:52,796 INFO    events         [system] support_bot_started user=None 
+2026-08-20 23:34:54,247 INFO    aiogram.dispatcher Start polling
+2026-08-20 23:34:54,414 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-21 11:59:59,649 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-21 12:00:29,033 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-21 12:00:29,218 INFO    events         [system] support_bot_started user=None 
+2026-08-21 12:00:29,254 INFO    aiogram.dispatcher Start polling
+2026-08-21 12:00:29,411 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-21 12:04:01,863 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:04:01,866 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:04:14,887 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:05:02,629 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:05:02,634 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:05:16,274 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:13:35,536 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:13:35,544 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:13:49,860 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:18:30,474 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:18:30,479 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:18:38,545 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:18:38,551 WARNING aiogram.dispatcher Sleep for 1.376594 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:18:51,977 INFO    aiogram.dispatcher Connection established (tryings = 2, bot id = 8899411808)
+2026-08-21 12:19:57,536 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:19:57,541 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:20:11,351 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:20:50,005 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:20:50,021 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:20:57,175 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:20:57,178 WARNING aiogram.dispatcher Sleep for 1.288390 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:21:09,840 INFO    aiogram.dispatcher Connection established (tryings = 2, bot id = 8899411808)
+2026-08-21 12:22:01,871 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:22:01,905 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:22:14,939 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:22:43,411 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:22:43,447 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:22:57,188 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:26:45,506 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:26:45,510 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:26:53,207 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:26:53,211 WARNING aiogram.dispatcher Sleep for 1.375659 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:27:06,073 INFO    aiogram.dispatcher Connection established (tryings = 2, bot id = 8899411808)
+2026-08-21 12:32:19,041 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:32:19,047 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:32:32,196 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:33:59,724 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:33:59,747 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:34:05,094 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: 
+2026-08-21 12:34:05,096 WARNING aiogram.dispatcher Sleep for 1.164014 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:34:17,640 INFO    aiogram.dispatcher Connection established (tryings = 2, bot id = 8899411808)
+2026-08-21 12:35:02,698 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:35:02,708 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:35:09,732 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:35:09,736 WARNING aiogram.dispatcher Sleep for 1.189831 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:35:22,945 INFO    aiogram.dispatcher Connection established (tryings = 2, bot id = 8899411808)
+2026-08-21 12:37:19,927 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:37:19,944 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:37:32,989 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:42:20,823 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:42:20,828 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:42:33,871 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:47:21,677 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:47:21,685 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:47:35,463 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:52:22,576 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:52:22,579 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:52:36,372 INFO    aiogram.dispatcher Connection established (tryings = 1, bot id = 8899411808)
+2026-08-21 12:55:07,600 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:55:07,650 WARNING aiogram.dispatcher Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8899411808)
+2026-08-21 12:55:13,028 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:55:13,031 WARNING aiogram.dispatcher Sleep for 1.299973 seconds and try again... (tryings = 1, bot id = 8899411808)
+2026-08-21 12:55:17,009 ERROR   aiogram.dispatcher Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-08-21 12:55:17,033 WARNING aiogram.dispatcher Sleep for 1.560920 seconds and try again... (tryings = 2, bot id = 8899411808)
+2026-08-21 12:55:30,007 INFO    aiogram.dispatcher Connection established (tryings = 3, bot id = 8899411808)
+2026-08-21 17:21:10,514 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-21 17:21:12,087 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-21 17:21:12,273 INFO    events         [system] support_bot_started user=None 
+2026-08-21 17:21:12,298 INFO    aiogram.dispatcher Start polling
+2026-08-21 17:21:12,463 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-22 22:17:23,162 INFO    support        доставка ответов поддержки раз в 5 с
+2026-08-22 22:17:26,882 INFO    support.bot    бот поддержки @Antarcticsup_robot (id 8899411808) запущен
+2026-08-22 22:17:27,449 INFO    events         [system] support_bot_started user=None 
+2026-08-22 22:17:27,487 INFO    aiogram.dispatcher Start polling
+2026-08-22 22:17:28,030 INFO    aiogram.dispatcher Run polling for bot @Antarcticsup_robot id=8899411808 - 'Antarctic support'
+2026-08-22 22:17:28,666 INFO    events         [support] bot_start user=3 
+2026-08-22 22:17:28,729 INFO    events         [support] ticket_opened user=3 обращение №2
+2026-08-22 22:17:28,731 INFO    events         [support] user_message user=3 обращение №2: сек
+2026-08-22 22:17:28,760 INFO    events         [support] ticket_opened user=3 обращение №3
+2026-08-22 22:17:28,761 INFO    events         [support] user_message user=3 обращение №3: миян обижают😭
+2026-08-22 22:17:28,807 INFO    events         [support] ticket_opened user=3 обращение №4
+2026-08-22 22:17:28,808 INFO    events         [support] user_message user=3 обращение №4: щас включу его
+2026-08-22 22:17:30,318 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 35, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 74, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 195, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 187, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\support_main.py", line 83, in incoming
+    await common.answer(message, note or texts.SUPPORT_SENT)
+  File "C:\tg bot\app\bot\common.py", line 48, in answer
+    return await message.answer(text, reply_markup=keyboard, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\bot.py", line 514, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 1693, in __aenter__
+    self._resp: _RetType_co = await self._coro
+                              ^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 858, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 812, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 657, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1242, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1589, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 66, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 123, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 767, in readexactly
+    raise exceptions.IncompleteReadError(incomplete, n)
+asyncio.exceptions.IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,413 ERROR   events         [support] bot_error user=None IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,425 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 35, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 74, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 195, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 187, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\support_main.py", line 83, in incoming
+    await common.answer(message, note or texts.SUPPORT_SENT)
+  File "C:\tg bot\app\bot\common.py", line 48, in answer
+    return await message.answer(text, reply_markup=keyboard, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\bot.py", line 514, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 1693, in __aenter__
+    self._resp: _RetType_co = await self._coro
+                              ^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 858, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 812, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 657, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1242, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1589, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 66, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 123, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 767, in readexactly
+    raise exceptions.IncompleteReadError(incomplete, n)
+asyncio.exceptions.IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,448 ERROR   events         [support] bot_error user=None IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,453 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 35, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 74, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 195, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 187, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\support_main.py", line 83, in incoming
+    await common.answer(message, note or texts.SUPPORT_SENT)
+  File "C:\tg bot\app\bot\common.py", line 48, in answer
+    return await message.answer(text, reply_markup=keyboard, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\bot.py", line 514, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 1693, in __aenter__
+    self._resp: _RetType_co = await self._coro
+                              ^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 858, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 812, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 657, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1242, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1589, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 66, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 123, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 767, in readexactly
+    raise exceptions.IncompleteReadError(incomplete, n)
+asyncio.exceptions.IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,477 ERROR   events         [support] bot_error user=None IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,480 ERROR   support.bot    ошибка обработки апдейта
+Traceback (most recent call last):
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 35, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\middlewares.py", line 74, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 195, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 167, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 159, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\router.py", line 187, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\app\bot\support_main.py", line 50, in start
+    await common.answer(message, texts.support_start(hours=await support.hours(session)))
+  File "C:\tg bot\app\bot\common.py", line 48, in answer
+    return await message.answer(text, reply_markup=keyboard, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\bot.py", line 514, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 167, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url,
+        ^^^^
+        data=form,
+        ^^^^^^^^^^
+        timeout=self.timeout if timeout is None else timeout,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 1693, in __aenter__
+    self._resp: _RetType_co = await self._coro
+                              ^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 858, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\client.py", line 812, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 657, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1242, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp\connector.py", line 1589, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 66, in _wrap_create_connection
+    return await self._connect_via_proxy(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\aiohttp_socks\connector.py", line 123, in _connect_via_proxy
+    stream = await proxy.connect(
+             ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 79, in connect
+    return await self._connect(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_proxy.py", line 130, in _connect
+    await connector.connect(
+    ...<3 lines>...
+    )
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\_connectors\socks5_async.py", line 43, in connect
+    data = await stream.read_exact(socks5.AuthMethodReply.SIZE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\tg bot\.venv\Lib\site-packages\python_socks\async_\asyncio\v2\_stream.py", line 32, in read_exact
+    return await self._reader.readexactly(n)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\streams.py", line 767, in readexactly
+    raise exceptions.IncompleteReadError(incomplete, n)
+asyncio.exceptions.IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,505 ERROR   events         [support] bot_error user=None IncompleteReadError: 0 bytes read on a total of 2 expected bytes
+2026-08-22 22:17:30,521 INFO    aiogram.event  Update id=767473785 is handled. Duration 1888 ms by bot id=8899411808
+2026-08-22 22:17:30,533 INFO    aiogram.event  Update id=767473787 is handled. Duration 1894 ms by bot id=8899411808
+2026-08-22 22:17:30,550 INFO    aiogram.event  Update id=767473786 is handled. Duration 1913 ms by bot id=8899411808
+2026-08-22 22:17:30,568 INFO    aiogram.event  Update id=767473784 is handled. Duration 1945 ms by bot id=8899411808

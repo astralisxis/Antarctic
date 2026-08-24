@@ -1,0 +1,8 @@
+tunnel: 9a5036eb-ca98-483c-aca6-ab6d5dc8a3c5
+credentials-file: C:\tg bot\.cloudflared\dabbackwood-admin.json
+ingress:
+  - hostname: dabbackwood.cfd
+    service: http://127.0.0.1:8080
+  - hostname: antarctic.cfd
+    service: http://127.0.0.1:8081
+  - service: http_status:404

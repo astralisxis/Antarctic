@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sSL \"https://api.github.com/repos/medovi40k/lolzteam-py\")",
+      "Bash(curl -sSL \"https://api.github.com/repos/medovi40k/lolzteam-py/branches\")",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -sS \"https://pypi.org/pypi/lolzteam/json\")",
+      "Bash(python -c ' *)",
+      "Bash(curl -sS \"https://api.github.com/repos/medovi40k/lolzteam-py/contents/\")",
+      "Bash(curl -sSL \"https://raw.githubusercontent.com/medovi40k/lolzteam-py/master/pyproject.toml\")",
+      "Bash(curl -sS \"https://api.github.com/repos/medovi40k/lolzteam-py/contents/pyproject.toml\")",
+      "Bash(curl -sS \"https://api.github.com/repos/medovi40k/lolzteam-py/contents/lolzteam\")",
+      "Bash(curl -sS \"https://api.github.com/repos/medovi40k/lolzteam-py/contents/lolzteam/market\")",
+      "Bash(curl -sS \"https://api.github.com/repos/medovi40k/lolzteam-py/contents/lolzteam/sections/_market_generated.py\")"
+    ]
+  }
+}

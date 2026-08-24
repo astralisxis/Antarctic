@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block h1 %}{% if is_test %}Удалить отзыв №{{ r.id }}?{% else %}Отзыв №{{ r.id }} удалить нельзя{% endif %}{% endblock %}
+{% block sub %}<div class="sub">Удаляются только тестовые отзывы — клиентские отклоняют, а не убирают</div>{% endblock %}
+{% block meta %}<a class="link" href="/reviews">к отзывам</a>{% endblock %}
+
+{% block content %}
+
+<div class="card" style="max-width:560px">
+  <div class="section-title" style="margin-top:0">{% if is_test %}Что удаляется{% else %}Что это за отзыв{% endif %}</div>
+  <table class="table">
+    <tbody>
+      <tr><td>Отзыв</td><td class="mono">№{{ r.id }}{% if is_test %} · тестовый{% else %} · от клиента{% endif %}</td></tr>
+      <tr><td>В канале подписан</td><td class="mono">{{ name }}</td></tr>
+      <tr><td>Оценка</td><td class="mono">{{ r.stars | stars }}</td></tr>
+      <tr>
+        <td>Товар</td>
+        <td>
+          {% if r.product_title %}{{ r.product_title }}
+          {% elif r.order_id %}<a class="link" href="/orders/{{ r.order_id }}">заказ №{{ r.order_id }}</a>
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+      <tr><td>Текст</td><td>{{ r.text or "— без текста —" }}</td></tr>
+      <tr><td>Создан</td><td class="muted mono">{{ r.created_at | time }}</td></tr>
+      <tr>
+        <td>Сообщение в канале</td>
+        <td class="mono">{% if r.channel_message_id %}{{ r.channel_message_id }}{% else %}—{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note note--quiet" style="margin-top:10px">
+    {% if not is_test %}
+      Это отзыв покупателя — удалить его нельзя. Если он не должен быть в канале,
+      отклоните его на странице отзывов; уже опубликованный сначала уберите из канала.
+    {% elif r.channel_message_id %}
+      Запись и нарисованная карточка удаляются из панели. Сообщение
+      <span class="mono">{{ r.channel_message_id }}</span> в канале останется —
+      уберите его руками, из админки Telegram недоступен.
+    {% else %}
+      Отзыв в канал ещё не ушёл, так что удаление его и остановит.
+    {% endif %}
+  </div>
+
+  <div class="acts" style="margin-top:14px">
+    {% if is_test %}
+      <form method="post" action="/reviews/{{ r.id }}/delete">
+        <button class="btn btn--primary" type="submit">Удалить отзыв</button>
+      </form>
+    {% endif %}
+    <a class="btn" href="/reviews">Отмена</a>
+  </div>
+</div>
+
+{% endblock %}

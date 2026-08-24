@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block h1 %}Блокировки по адресу{% endblock %}
+{% block sub %}<div class="sub">{{ limit }} неудачных входов подряд — адрес в бане до снятия здесь</div>{% endblock %}
+{% block meta %}<a class="link" href="/settings">к настройкам</a>{% endblock %}
+
+{% block content %}
+
+<div class="grid grid--3" style="margin-bottom:14px">
+  <div class="card stat">
+    <div class="k">В бане</div>
+    <div class="v">{{ stat.banned | num }}</div>
+    <div class="d">снимается только здесь</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Копят неудачи</div>
+    <div class="v">{{ stat.watching | num }}</div>
+    <div class="d">до бана осталось меньше {{ limit }}</div>
+  </div>
+  <div class="card stat">
+    <div class="k">Ваш адрес сейчас</div>
+    <div class="v mono" style="font-size:20px">{{ my_ip }}</div>
+    <div class="d">его лучше не банить</div>
+  </div>
+</div>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:150px">Адрес</th>
+        <th style="width:90px">Состояние</th>
+        <th class="num" style="width:80px">Неудач</th>
+        <th style="width:110px">Первая</th>
+        <th style="width:110px">Последняя</th>
+        <th>Какие логины пробовали</th>
+        <th style="width:110px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+        <tr>
+          <td class="mono strong">{{ r.ip }}{% if r.ip == my_ip %} <span class="muted">· вы</span>{% endif %}</td>
+          <td>
+            {% if r.banned %}<span class="tag tag--fill">бан</span>
+            {% else %}<span class="tag">под счётом</span>{% endif %}
+          </td>
+          <td class="num strong">{{ r.fails | num }} <span class="muted">/ {{ limit }}</span></td>
+          <td class="muted mono nowrap">{{ r.first_fail_at | time }}</td>
+          <td class="muted mono nowrap">{{ r.last_fail_at | time }}</td>
+          <td><span class="clip mono">{{ r.logins or "—" }}</span></td>
+          <td>
+            <a class="btn btn--sm" href="/security/ip/{{ r.id }}/unban">
+              {% if r.banned %}Снять бан{% else %}Сбросить{% endif %}
+            </a>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="empty">Никто пароль не перебирал.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="note note--quiet" style="margin-top:14px">
+  Счётчик обнуляется сам после {{ quiet_hours }} часов тишины и удачным входом — свои
+  опечатки в бан не складываются. Сам бан не истекает: подбор пароля просто подождал бы.
+  <br>
+  Забаненным окажется и свой адрес, если {{ limit }} раз не вспомнить пароль. Снять его
+  тогда неоткуда — заходить-то нельзя. На этот случай есть команда на сервере:
+  <span class="mono">python -m app.tools.unban_ip &lt;адрес&gt;</span>, а
+  <span class="mono">python -m app.tools.unban_ip --all</span> снимает все сразу.
+</div>
+
+{% endblock %}

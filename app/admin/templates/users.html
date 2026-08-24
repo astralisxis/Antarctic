@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block h1 %}Пользователи{% endblock %}
+{% block sub %}<div class="sub">Клиенты бота: баланс, покупки, ограничения</div>{% endblock %}
+{% block meta %}{{ total | num }} клиентов{% endblock %}
+
+{% block content %}
+
+<form class="bar" method="get" action="/users">
+  <div class="field">
+    <label for="q">Поиск</label>
+    <input class="input" id="q" name="q" value="{{ f.q }}" placeholder="@username или ID">
+  </div>
+
+  <div class="field">
+    <label for="only">Показать</label>
+    <select id="only" name="only">
+      <option value="">всех</option>
+      <option value="paid" {% if f.only == 'paid' %}selected{% endif %}>с пополнениями</option>
+      <option value="limited" {% if f.only == 'limited' %}selected{% endif %}>с ограничениями</option>
+      <option value="banned" {% if f.only == 'banned' %}selected{% endif %}>заблокированных</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="sort">Порядок</label>
+    <select id="sort" name="sort">
+      {% for key, title in sorts.items() %}
+        <option value="{{ key }}" {% if f.sort == key %}selected{% endif %}>{{ title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button class="btn btn--primary" type="submit">Показать</button>
+  <a class="btn" href="/users">Сбросить</a>
+</form>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Клиент</th>
+        <th style="width:120px">Telegram ID</th>
+        <th class="num" style="width:96px">Баланс</th>
+        <th class="num" style="width:104px">Пополнено</th>
+        <th class="num" style="width:96px">Куплено</th>
+        <th class="num" style="width:70px">Заказов</th>
+        <th class="num" style="width:80px">Рефералов</th>
+        <th style="width:96px">Активность</th>
+        <th style="width:110px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in rows %}
+        <tr>
+          <td class="strong"><a class="link" href="/users/{{ u.id }}">{{ u.display_name }}</a></td>
+          <td class="mono muted">{{ u.tg_id }}</td>
+          <td class="num strong">{{ u.balance | money }}</td>
+          <td class="num muted">{{ u.total_topup | money }}</td>
+          <td class="num muted">{{ u.total_spent | money }}</td>
+          <td class="num">{{ u.orders_count | num }}</td>
+          <td class="num muted">{{ u.referrals_count | num }}</td>
+          <td class="muted mono nowrap">{{ u.last_seen_at | time }}</td>
+          <td>
+            {% if u.is_banned %}<span class="tag tag--fill">блок</span>
+            {% elif u.restrict_buy or u.restrict_topup or u.restrict_support %}
+              <span class="tag tag--strong">лимиты</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9" class="empty">Под фильтр ничего не попало.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+  {% set qs = "&q=" ~ f.q ~ "&only=" ~ f.only ~ "&sort=" ~ f.sort %}
+  <div class="pager">
+    {% if page > 1 %}<a class="btn btn--sm" href="/users?page={{ page - 1 }}{{ qs }}">Назад</a>{% endif %}
+    <span>{{ page }} из {{ pages }}</span>
+    {% if page < pages %}<a class="btn btn--sm" href="/users?page={{ page + 1 }}{{ qs }}">Дальше</a>{% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

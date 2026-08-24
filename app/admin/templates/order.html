@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block h1 %}Заказ №{{ o.id }}{% endblock %}
+{% block sub %}<div class="sub">{{ o.offer_title }} · {{ o.status | order_status }}</div>{% endblock %}
+{% block meta %}<a class="link" href="/orders">к списку</a>{% endblock %}
+
+{% block content %}
+
+<div class="grid grid--2">
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Заказ</div>
+    <dl class="kv">
+      <dt>Создан</dt><dd>{{ o.created_at | dt }}</dd>
+      <dt>Закрыт</dt><dd>{{ o.completed_at | dt }}</dd>
+      <dt>Получатель</dt>
+      <dd>
+        {% if u %}<a class="link" href="/users/{{ u.id }}">{{ u.display_name }}</a>
+          <span class="mono muted">{{ u.tg_id }}</span>
+        {% else %}—{% endif %}
+      </dd>
+      <dt>Оплатил</dt>
+      <dd>
+        {% if buyer %}<a class="link" href="/users/{{ buyer.id }}">{{ buyer.display_name }}</a>
+          <span class="mono muted">{{ buyer.tg_id }}</span>
+        {% else %}—{% endif %}
+      </dd>
+      <dt>Цена</dt><dd class="strong">{{ o.price | money }}</dd>
+      <dt>Закуп</dt><dd>{{ o.lzt_cost | money }}</dd>
+      <dt>Маржа</dt><dd>{{ o.margin | money }}</dd>
+      <dt>Лот на LZT</dt>
+      <dd>
+        {% if o.lzt_item_id %}
+          <a class="link mono" href="https://lzt.market/{{ o.lzt_item_id }}/" target="_blank" rel="noreferrer">{{ o.lzt_item_id }}</a>
+        {% else %}—{% endif %}
+      </dd>
+      <dt>Попыток закупки</dt><dd>{{ o.attempts }}</dd>
+      <dt>Возврат</dt><dd>{% if o.refunded %}сделан{% else %}нет{% endif %}</dd>
+      {% if o.error %}<dt>Ошибка</dt><dd>{{ o.error }}</dd>{% endif %}
+      <dt>Валидность</dt>
+      <dd>
+        {% if o.account_valid is sameas true %}действителен
+        {% elif o.account_valid is sameas false %}недействителен
+        {% else %}не проверялся{% endif %}
+        {% if o.account_checked_at %}<span class="muted"> · {{ o.account_checked_at | dt }}</span>{% endif %}
+      </dd>
+      {% if o.account_invalid_reason %}<dt>Причина</dt><dd>{{ o.account_invalid_reason }}</dd>{% endif %}
+      {% if o.replacement_requested_at %}
+        <dt>Замена</dt><dd>{{ o.replacement_status or 'ожидает решения' }}{% if o.replacement_error %}: {{ o.replacement_error }}{% endif %}</dd>
+      {% endif %}
+    </dl>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="margin-top:0">Номер и вход</div>
+    <dl class="kv">
+      <dt>Номер</dt><dd class="mono">{{ o.phone or "—" }}</dd>
+      <dt>Код входа</dt><dd class="mono">{{ o.login_code or "—" }}</dd>
+      <dt>Код запрошен</dt><dd>{{ o.code_requested_at | dt }}</dd>
+      <dt>Запросов кода</dt><dd>{{ o.code_requests }}</dd>
+      <dt>Клиент берёт код</dt>
+      <dd>
+        {% if not code_hours %}без ограничения по сроку
+        {% elif code_open %}до {{ code_until | dt }}
+        {% else %}срок вышел{% if code_until %} {{ code_until | dt }}{% endif %} — код выдаёт поддержка
+        {% endif %}
+      </dd>
+    </dl>
+
+    {% if creds.tg_password or creds.has_session %}
+      <details class="secret" style="margin-top:10px">
+        <summary>показать данные входа</summary>
+        <dl class="kv" style="margin-top:8px">
+          {% if creds.tg_password %}<dt>Облачный пароль</dt><dd class="mono">{{ creds.tg_password }}</dd>{% endif %}
+          {% if creds.auth_key %}<dt>Auth key (hex)</dt><dd class="mono" style="word-break:break-all">{{ creds.auth_key }}</dd>{% endif %}
+          {% if creds.dc_id %}<dt>DC ID</dt><dd class="mono">{{ creds.dc_id }}</dd>{% endif %}
+        </dl>
+        <div class="hint">Маркет отдаёт ключ сессии в полях login и password — это не логин и не пароль.</div>
+      </details>
+    {% endif %}
+
+    <div class="acts" style="margin-top:12px">
+      {% if delivered %}
+        <form method="post" action="/orders/{{ o.id }}/code">
+          <button class="btn btn--primary" type="submit">Получить код</button>
+        </form>
+        <form method="post" action="/orders/{{ o.id }}/reset">
+          <button class="btn" type="submit">Сбросить сессии</button>
+        </form>
+        <form method="post" action="/orders/{{ o.id }}/validate">
+          <button class="btn" type="submit">Проверить валидность</button>
+        </form>
+        {% if o.status != 'done' %}
+          <form method="post" action="/orders/{{ o.id }}/done">
+            <button class="btn" type="submit">Завершить</button>
+          </form>
+        {% endif %}
+      {% endif %}
+      {% if in_flight %}
+        <form method="post" action="/orders/{{ o.id }}/recheck">
+          <button class="btn btn--primary" type="submit">Перепроверить</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if not o.refunded %}
+  <div class="card" style="margin-top:10px">
+    <div class="section-title" style="margin-top:0">Возврат</div>
+    <form class="bar" method="post" action="/orders/{{ o.id }}/refund" style="margin:0">
+      <div class="field">
+        <label for="comment">Причина</label>
+        <input class="input" id="comment" name="comment" placeholder="номер не пришёл" style="width:320px">
+      </div>
+      <button class="btn" type="submit">Вернуть {{ o.price | money }}</button>
+    </form>
+    <div class="hint">Деньги вернутся тому, кто оплатил заказ; заказ уйдёт в статус «возврат».</div>
+  </div>
+{% endif %}
+
+{% if snapshot %}
+  <div class="section-title">Карточка лота на момент покупки</div>
+  <div class="panel">
+    <table class="table">
+      <tbody>
+        {% for key, value in snapshot %}
+          <tr>
+            <td class="muted mono" style="width:220px">{{ key }}</td>
+            <td class="mono">{{ value }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+<div class="section-title">Что происходило с заказом</div>
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:96px">Время</th>
+        <th style="width:104px">Раздел</th>
+        <th style="width:160px">Событие</th>
+        <th>Сообщение</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+        <tr>
+          <td class="muted mono nowrap">{{ e.ts | time }}</td>
+          <td><span class="tag">{{ e.section | section }}</span></td>
+          <td class="mono">{{ e.event }}</td>
+          <td>{{ e.message or "—" }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="empty">Записей по заказу нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

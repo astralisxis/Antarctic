@@ -1,0 +1,52 @@
+00:12:14 INFO    bot            бот @AntarcticShop_Robot (id 8838707397) запущен
+00:12:15 INFO    events         [system] bot_started user=None 
+00:12:15 INFO    aiogram.dispatcher Start polling
+00:12:15 INFO    aiogram.dispatcher Run polling for bot @AntarcticShop_Robot id=8838707397 - 'Antarctic Shop'
+00:12:15 INFO    events         [shop] open user=1 
+00:12:17 INFO    aiogram.event  Update id=621125374 is handled. Duration 1725 ms by bot id=8838707397
+00:12:17 INFO    events         [shop] open user=1 
+00:12:17 INFO    aiogram.event  Update id=621125375 is handled. Duration 2055 ms by bot id=8838707397
+00:12:18 INFO    events         [shop] open user=1 
+00:12:18 INFO    aiogram.event  Update id=621125376 is handled. Duration 2349 ms by bot id=8838707397
+00:12:21 INFO    events         [payment] open user=1 
+00:12:21 INFO    aiogram.event  Update id=621125377 is handled. Duration 235 ms by bot id=8838707397
+00:12:21 INFO    events         [earn] open user=1 
+00:12:22 INFO    aiogram.event  Update id=621125378 is handled. Duration 258 ms by bot id=8838707397
+00:12:22 INFO    events         [support] open user=1 
+00:12:23 INFO    aiogram.event  Update id=621125379 is handled. Duration 244 ms by bot id=8838707397
+00:12:24 INFO    events         [earn] open user=1 
+00:12:24 INFO    aiogram.event  Update id=621125380 is handled. Duration 258 ms by bot id=8838707397
+00:12:25 INFO    events         [earn] open_comments user=1 
+00:12:26 INFO    aiogram.event  Update id=621125381 is handled. Duration 825 ms by bot id=8838707397
+00:12:27 INFO    aiogram.event  Update id=621125382 is handled. Duration 390 ms by bot id=8838707397
+00:12:27 INFO    events         [earn] open_video user=1 
+00:12:28 INFO    aiogram.event  Update id=621125383 is handled. Duration 395 ms by bot id=8838707397
+00:12:29 INFO    aiogram.event  Update id=621125384 is handled. Duration 366 ms by bot id=8838707397
+00:12:30 INFO    events         [support] open user=1 
+00:12:30 INFO    aiogram.event  Update id=621125385 is handled. Duration 229 ms by bot id=8838707397
+00:12:31 INFO    events         [user] open_profile user=1 
+00:12:31 INFO    aiogram.event  Update id=621125386 is handled. Duration 214 ms by bot id=8838707397
+00:12:32 INFO    events         [referral] open user=1 
+00:12:33 INFO    aiogram.event  Update id=621125387 is handled. Duration 412 ms by bot id=8838707397
+00:12:34 INFO    aiogram.event  Update id=621125388 is handled. Duration 363 ms by bot id=8838707397
+00:12:35 INFO    events         [user] open_accounts user=1 
+00:12:35 INFO    aiogram.event  Update id=621125389 is handled. Duration 399 ms by bot id=8838707397
+00:12:39 INFO    aiogram.event  Update id=621125390 is handled. Duration 365 ms by bot id=8838707397
+00:12:39 INFO    events         [user] open_topups user=1 
+00:12:39 INFO    aiogram.event  Update id=621125391 is handled. Duration 374 ms by bot id=8838707397
+00:12:41 INFO    aiogram.event  Update id=621125392 is handled. Duration 381 ms by bot id=8838707397
+00:12:41 INFO    events         [user] open_orders user=1 
+00:12:41 INFO    aiogram.event  Update id=621125393 is handled. Duration 395 ms by bot id=8838707397
+00:12:42 INFO    aiogram.event  Update id=621125394 is handled. Duration 399 ms by bot id=8838707397
+00:15:21 INFO    events         [shop] open user=1 
+00:15:21 INFO    aiogram.event  Update id=621125395 is handled. Duration 257 ms by bot id=8838707397
+00:15:22 INFO    events         [payment] open user=1 
+00:15:22 INFO    aiogram.event  Update id=621125396 is handled. Duration 231 ms by bot id=8838707397
+00:15:25 INFO    aiogram.event  Update id=621125397 is handled. Duration 210 ms by bot id=8838707397
+00:15:27 INFO    events         [user] open_profile user=1 
+00:15:27 INFO    aiogram.event  Update id=621125398 is handled. Duration 306 ms by bot id=8838707397
+00:15:29 INFO    events         [user] open_topups user=1 
+00:15:30 INFO    aiogram.event  Update id=621125399 is handled. Duration 397 ms by bot id=8838707397
+00:15:31 INFO    aiogram.event  Update id=621125400 is handled. Duration 395 ms by bot id=8838707397
+00:15:31 INFO    events         [support] open user=1 
+00:15:31 INFO    aiogram.event  Update id=621125401 is handled. Duration 216 ms by bot id=8838707397

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+  <title>Antarctic Shop</title>
+  {% if mode == 'miniapp' %}<script src="https://telegram.org/js/telegram-web-app.js"></script>{% endif %}
+  <link rel="stylesheet" href="/static/web.css?v=4">
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body class="store-page" data-mode="{{ mode }}">
+  <div class="store-shell">
+    <header class="store-header">
+      <a class="brand" href="{% if mode == 'miniapp' %}/app{% else %}/shop{% endif %}" aria-label="Antarctic Shop"><span class="brand-mark">A</span><span>ANTARCTIC</span></a>
+      <div class="header-actions">
+        <button class="balance-chip" id="balance-chip" type="button" data-view="topup"><i data-lucide="wallet-cards"></i><span id="header-balance">0 ₽</span><b><i data-lucide="plus"></i></b></button>
+        <button class="menu-button" id="menu-open" type="button" aria-label="Открыть меню"><i data-lucide="menu"></i></button>
+      </div>
+    </header>
+    <main class="store-main" id="app-main"><div class="loading-state">Загрузка магазина</div></main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Основная навигация">
+    <button data-view="shop" class="nav-item is-active" type="button"><span class="nav-icon"><i data-lucide="layout-grid"></i></span><span>Каталог</span></button>
+    <button data-view="support" class="nav-item" type="button"><span class="nav-icon"><i data-lucide="messages-square"></i></span><span>Поддержка</span></button>
+    <button data-view="topup" class="nav-item" type="button"><span class="nav-icon"><i data-lucide="wallet-cards"></i></span><span>Пополнить</span></button>
+    <button data-view="profile" class="nav-item" type="button"><span class="nav-icon"><i data-lucide="user-round"></i></span><span>Профиль</span></button>
+  </nav>
+
+  <div class="drawer" id="drawer" hidden>
+    <button class="drawer__backdrop" data-close-drawer aria-label="Закрыть меню"></button>
+    <aside class="drawer__panel">
+      <div class="drawer__head"><strong>Меню</strong><button class="close-button" data-close-drawer type="button" aria-label="Закрыть"><i data-lucide="x"></i></button></div>
+      <div class="drawer-user"><div class="avatar" id="drawer-avatar">A</div><div><strong id="drawer-name">Гость</strong><span id="drawer-balance">Войдите для покупок</span></div></div>
+      <div class="drawer-links">
+        <button data-menu-view="shop"><i data-lucide="layout-grid"></i><span>Каталог</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="support"><i data-lucide="messages-square"></i><span>Поддержка</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="topup"><i data-lucide="wallet-cards"></i><span>Пополнить</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="profile"><i data-lucide="user-round"></i><span>Профиль</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="referrals"><i data-lucide="users-round"></i><span>Рефералы</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="leaders"><i data-lucide="trophy"></i><span>Лидеры</span><i data-lucide="chevron-right"></i></button>
+        <button data-menu-view="promos"><i data-lucide="ticket-percent"></i><span>Промокоды</span><i data-lucide="chevron-right"></i></button>
+      </div>
+      <button class="drawer-auth" id="drawer-auth-action" type="button"><i data-lucide="log-in"></i><span>Войти</span></button>
+    </aside>
+  </div>
+  <div class="modal" id="modal" hidden><button class="modal__backdrop" data-close-modal aria-label="Закрыть"></button><section class="modal__panel" id="modal-content"></section></div>
+  <script src="/static/web.js?v=4"></script>
+</body>
+</html>

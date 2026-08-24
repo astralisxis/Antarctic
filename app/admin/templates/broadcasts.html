@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block h1 %}Рассылки{% endblock %}
+{% block sub %}<div class="sub">Сообщения клиентам через основной бот</div>{% endblock %}
+{% block meta %}{{ stats.total | num }} рассылок{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom:12px">
+  <div class="section-title" style="margin-top:0">Новая рассылка</div>
+  <form method="post" action="/broadcasts" enctype="multipart/form-data">
+    <div class="bar">
+      <div class="field" style="min-width:240px;flex:1">
+        <label for="bc-title">Название для админки</label>
+        <input class="input" id="bc-title" name="title" maxlength="120" placeholder="Например, новое поступление">
+      </div>
+      <div class="field">
+        <label for="bc-audience">Получатели</label>
+        <select id="bc-audience" name="audience">
+          {% for key, title in audiences.items() %}
+            <option value="{{ key }}">{{ title }} — {{ audience_counts[key] | num }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="bc-image">Картинка</label>
+        <input class="input" id="bc-image" type="file" name="image" accept="image/*">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label for="bc-text">Текст в HTML</label>
+      <textarea id="bc-text" name="text" rows="7" maxlength="4096" required
+                placeholder="<b>Новое поступление</b>&#10;&#10;Выберите номер в магазине."></textarea>
+    </div>
+    <div class="hint">
+      Telegram понимает <span class="mono">&lt;b&gt;</span>, <span class="mono">&lt;i&gt;</span>,
+      <span class="mono">&lt;a href=&quot;https://...&quot;&gt;</span> и
+      <span class="mono">&lt;tg-emoji emoji-id=&quot;...&quot;&gt;</span>. С картинкой текст ограничен 1024 символами.
+    </div>
+
+    <div class="field" style="margin-top:10px;max-width:720px">
+      <label for="bc-buttons">Кнопки</label>
+      <textarea id="bc-buttons" name="buttons" rows="3"
+                placeholder="Открыть магазин | https://t.me/your_bot"></textarea>
+    </div>
+    <div class="hint">Одна кнопка на строку: подпись, вертикальная черта, ссылка. Не больше 8 кнопок.</div>
+
+    <div class="acts" style="margin-top:12px">
+      <button class="btn btn--primary" type="submit">Сохранить черновик</button>
+      <span class="muted">Перед отправкой будет отдельное подтверждение.</span>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:58px">№</th>
+        <th>Название</th>
+        <th style="width:150px">Аудитория</th>
+        <th style="width:120px">Статус</th>
+        <th style="width:210px">Доставка</th>
+        <th style="width:110px">Создана</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in rows %}
+        <tr>
+          <td class="mono">{{ b.id }}</td>
+          <td class="strong"><a class="link" href="/broadcasts/{{ b.id }}">{{ b.title or ('Рассылка №' ~ b.id) }}</a></td>
+          <td class="muted">{{ audiences.get(b.audience, b.audience) }}</td>
+          <td><span class="tag{% if b.status == 'sending' %} tag--strong{% elif b.status == 'done' %} tag--fill{% endif %}">{{ statuses.get(b.status, b.status) }}</span></td>
+          <td class="mono nowrap">{{ b.sent | num }} доставлено · {{ b.failed | num }} ошибок · {{ b.blocked | num }} блок</td>
+          <td class="muted mono nowrap">{{ b.created_at | time }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Рассылок пока нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pages > 1 %}
+<div class="pager">
+  {% if page > 1 %}<a class="btn" href="/broadcasts?page={{ page - 1 }}">Назад</a>{% endif %}
+  <span class="muted">{{ page }} из {{ pages }}</span>
+  {% if page < pages %}<a class="btn" href="/broadcasts?page={{ page + 1 }}">Дальше</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block h1 %}Замены{% endblock %}
+{% block sub %}<div class="sub">Заявки по гарантии и выдача нового аккаунта</div>{% endblock %}
+{% block meta %}{{ rows | length }} заявок{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Заказ</th>
+        <th>Клиент</th>
+        <th>Товар</th>
+        <th>Запрошено</th>
+        <th>Состояние</th>
+        <th style="width:330px">Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in rows %}
+        {% set u = users.get(o.id) %}
+        <tr>
+          <td><a class="link mono" href="/orders/{{ o.id }}">№{{ o.id }}</a></td>
+          <td>{% if u %}{{ u.display_name }} <span class="muted mono">{{ u.tg_id }}</span>{% else %}—{% endif %}</td>
+          <td>{{ o.offer_title }}<div class="muted mono">{{ o.phone or "—" }}</div></td>
+          <td class="muted mono">{{ o.replacement_requested_at | dt }}</td>
+          <td>
+            {% if o.replacement_status == 'completed' %}<span class="tag tag--fill">выполнена</span>
+            {% elif o.replacement_status == 'rejected' %}<span class="tag">отклонена</span>
+            {% elif o.replacement_status == 'failed' %}<span class="tag tag--strong">ошибка</span>
+            {% elif o.replacement_status == 'review' %}<span class="tag tag--strong">перепроверка</span>
+            {% elif o.replacement_status == 'processing' %}<span class="tag">покупка</span>
+            {% else %}<span class="tag tag--strong">ждёт решения</span>{% endif %}
+            {% if o.replacement_error %}<div class="muted" style="font-size:11px">{{ o.replacement_error }}</div>{% endif %}
+          </td>
+          <td>
+            {% if not o.replacement_status or o.replacement_status in ['pending', 'failed'] %}
+              <div class="acts">
+                <form method="post" action="/replacements/{{ o.id }}/approve">
+                  <button class="btn btn--primary btn--sm" type="submit">Подтвердить и купить</button>
+                </form>
+                {% if o.replacement_status != 'failed' %}
+                <form method="post" action="/replacements/{{ o.id }}/reject">
+                  <input class="input" name="reason" placeholder="причина отказа" style="width:150px">
+                  <button class="btn btn--sm" type="submit">Отклонить</button>
+                </form>
+                {% endif %}
+              </div>
+            {% elif o.replacement_status == 'review' %}
+              <form method="post" action="/replacements/{{ o.id }}/recheck">
+                <button class="btn btn--primary btn--sm" type="submit">Перепроверить покупку</button>
+              </form>
+            {% elif o.replacement_status == 'processing' and o.replacement_lzt_item_id %}
+              <form method="post" action="/replacements/{{ o.id }}/recheck">
+                <button class="btn btn--primary btn--sm" type="submit">Перепроверить покупку</button>
+              </form>
+            {% elif o.replacement_status == 'processing' %}
+              <form method="post" action="/replacements/{{ o.id }}/retry">
+                <button class="btn btn--primary btn--sm" type="submit">Перезапустить</button>
+              </form>
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">Заявок на замену нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

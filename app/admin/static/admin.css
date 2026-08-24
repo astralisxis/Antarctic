@@ -1,0 +1,578 @@
+/* Дизайн-система: строгий монохром.
+   Палитра ровно та, что задана: фон, текст, вторичный, границы, акцент — чёрный.
+   Из неё выведены только две нейтральные производные: белая поверхность карточек
+   и #EFEFEC для наведения. Никаких оттенков, градиентов, теней, анимации декора. */
+
+:root {
+  --bg: #f6f6f4;
+  --card: #ffffff;
+  --text: #111111;
+  --muted: #777777;
+  --line: #d9d9d9;
+  --hover: #efefec;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --font: Helvetica, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 14px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+a.link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 1px;
+}
+
+/* ------------------------------------------------------------------ каркас */
+.shell {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.side {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 18px 14px;
+  border-right: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.brand .sub {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 18px;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  background: var(--hover);
+}
+
+.nav a.active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.nav a.soon {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.nav .count {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.nav a.active .count {
+  color: var(--bg);
+}
+
+.side-foot {
+  position: absolute;
+  bottom: 16px;
+  left: 14px;
+  right: 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.side-foot form {
+  margin: 6px 0 0;
+}
+
+.side-foot button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 400 12px/1 var(--font);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.main {
+  max-width: 1120px;
+  padding: 22px 26px 48px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.head .sub {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.head .meta {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.section-title {
+  margin: 26px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ блоки */
+.grid {
+  display: grid;
+  gap: 10px;
+}
+
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.card {
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.stat .k {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.stat .v {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat .d {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.row .k {
+  color: var(--muted);
+}
+
+.row .v {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ таблица */
+.panel {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  vertical-align: top;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.muted { color: var(--muted); }
+.strong { font-weight: 500; }
+
+.mono {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.nowrap { white-space: nowrap; }
+
+.clip {
+  display: block;
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ метки */
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tag--strong {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.tag--fill {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+/* ------------------------------------------------------------------ формы */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text);
+  font: 500 13px/1 var(--font);
+  cursor: pointer;
+}
+
+.btn:hover { background: var(--hover); }
+
+.btn--primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.btn--primary:hover { background: #000; }
+
+.btn--sm { height: 28px; padding: 0 10px; font-size: 12px; }
+
+.field { margin-bottom: 12px; }
+
+.field label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.input,
+select,
+textarea {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text);
+  font: 400 13px/1 var(--font);
+}
+
+textarea {
+  height: auto;
+  padding: 8px 10px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bar .field { margin: 0; }
+.bar select { width: auto; min-width: 132px; }
+.bar .input { width: 200px; }
+
+.note {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.note--quiet { color: var(--muted); }
+
+.flash { margin-bottom: 14px; }
+
+/* строка действий над списком или под карточкой */
+.acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.acts form { margin: 0; }
+
+/* пара «подпись — значение» в карточке */
+.kv {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 4px 12px;
+  font-size: 13px;
+}
+
+.kv dt {
+  color: var(--muted);
+  margin: 0;
+}
+
+.kv dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.secret summary {
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.field--row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field--row label {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.field--row input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--text);
+}
+
+/* набор галочек: источники лота, аудитория рассылки, группы данных */
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.picks label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.picks input[type="checkbox"],
+.picks input[type="radio"] {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: var(--text);
+}
+
+/* выбранное читается и без цвета: рамка темнеет, подпись плотнее */
+.picks label:has(input:checked) { border-color: var(--text); }
+.picks input:checked ~ span { font-weight: 500; }
+
+/* столбиком — когда у каждой строки есть пояснение или цифра */
+.picks--col {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.picks--col label { justify-content: flex-start; }
+.picks--col .picks-num { margin-left: auto; color: var(--muted); }
+
+.hint {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.empty {
+  padding: 26px 14px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------ вход */
+.login {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 20px;
+}
+
+.login .card { width: 320px; }
+
+.login h1 {
+  margin-bottom: 2px;
+  font-size: 16px;
+}
+
+.login .sub {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------------ узкий экран */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+
+  .side {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .side-foot { position: static; margin-top: 12px; }
+  .main { padding: 18px 16px 32px; }
+  .grid--4, .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block h1 %}{{ title }}{% endblock %}
+{% block sub %}<div class="sub">Раздел появится в следующих итерациях</div>{% endblock %}
+
+{% block content %}
+<div class="note note--quiet">{{ description }}</div>
+{% endblock %}

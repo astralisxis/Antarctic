@@ -1,0 +1,315 @@
+2026-08-19 21:47:30,001 WARNING admin          создан первый админ «admin» с паролем из .env
+2026-08-19 21:47:30,009 INFO    events         [system] admin_started user=None env=local
+2026-08-19 21:47:30,031 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-19 21:48:47,968 WARNING events         [admin] login_failed user=None неудачный вход: admin
+2026-08-19 21:48:48,329 INFO    events         [admin] login user=None вход admin
+2026-08-19 21:53:52,134 INFO    events         [system] admin_started user=None env=local
+2026-08-19 21:53:52,158 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-19 21:53:54,174 INFO    events         [admin] login user=None вход admin
+2026-08-19 21:53:54,828 INFO    events         [admin] logout user=None 
+2026-08-20 00:03:00,334 INFO    events         [admin] login user=None вход admin
+2026-08-20 00:04:23,725 INFO    events         [admin] logout user=None 
+2026-08-20 00:04:39,744 INFO    events         [admin] login user=None вход admin
+2026-08-20 12:33:46,270 INFO    events         [system] admin_started user=None env=local
+2026-08-20 12:33:46,292 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 12:34:17,764 INFO    events         [admin] login user=None вход admin
+2026-08-20 12:36:09,980 INFO    events         [admin] offer_created user=None 12 Test
+2026-08-20 12:36:25,825 INFO    events         [admin] offer_toggled user=None 12: скрыта
+2026-08-20 13:58:44,466 INFO    events         [system] admin_started user=None env=local
+2026-08-20 13:58:44,559 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 13:59:30,535 INFO    events         [admin] offer_toggled user=None 12: включена
+2026-08-20 18:27:45,904 INFO    admin          настроек по умолчанию добавлено: 3
+2026-08-20 18:27:45,914 INFO    events         [system] admin_started user=None env=local
+2026-08-20 18:27:45,956 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 18:28:09,798 INFO    events         [admin] offer_deleted user=None 12 Test
+2026-08-20 18:28:39,876 INFO    events         [admin] market_scan_started user=None стран: 89, потолок: без, спам: nomatter
+2026-08-20 18:48:34,003 INFO    events         [system] admin_started user=None env=local
+2026-08-20 18:48:34,021 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 18:49:34,379 INFO    events         [admin] offer_created user=None IN Индия +91
+2026-08-20 18:52:12,743 INFO    events         [balance] credit user=1 +50 ₽ → 50 ₽ (зачислено вручную (admin))
+2026-08-20 18:52:12,745 INFO    events         [payment] paid user=1 Crypto Bot · 50 ₽
+2026-08-20 22:33:08,261 INFO    admin          настроек по умолчанию добавлено: 2
+2026-08-20 22:33:08,270 INFO    events         [system] admin_started user=None env=local
+2026-08-20 22:33:08,292 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 22:34:14,439 INFO    events         [system] admin_started user=None env=local
+2026-08-20 22:34:14,467 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:17:11,597 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:17:11,682 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:17:33,208 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:17:33,356 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:17:49,310 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:17:49,342 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:17:56,040 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:17:56,084 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:22:48,232 INFO    events         [admin] settings_changed user=None earn.comments.text, earn.video.text, reviews.channel_chat, reviews.channel_url, reviews.auto_publish
+2026-08-20 23:23:25,387 INFO    events         [admin] settings_changed user=None shop.enabled
+2026-08-20 23:23:46,042 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:23:46,064 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:24:11,726 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:24:11,791 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:24:12,939 INFO    events         [admin] settings_changed user=None shop.enabled
+2026-08-20 23:25:02,131 INFO    events         [support] admin_message user=1 обращение №1: добрый день
+2026-08-20 23:26:03,127 INFO    events         [support] admin_message user=1 обращение №1: идите нахуй
+2026-08-20 23:26:43,359 INFO    events         [admin] user_limits user=1 покупки: да, пополнение: да, поддержка: нет, процент: общий
+2026-08-20 23:26:55,557 INFO    events         [admin] user_limits user=1 покупки: да, пополнение: да, поддержка: да, процент: общий
+2026-08-20 23:27:10,166 INFO    events         [admin] user_banned user=1 на 1 дн.: killed
+2026-08-20 23:27:19,741 INFO    events         [admin] user_unbanned user=1 
+2026-08-20 23:29:24,719 INFO    events         [admin] user_banned user=1 на 1 дн.: чсп
+2026-08-20 23:29:33,343 INFO    events         [admin] user_unbanned user=1 
+2026-08-20 23:29:44,560 INFO    events         [admin] user_limits user=1 покупки: нет, пополнение: да, поддержка: да, процент: общий
+2026-08-20 23:29:53,843 INFO    events         [admin] user_limits user=1 покупки: да, пополнение: да, поддержка: да, процент: общий
+2026-08-20 23:34:24,024 INFO    events         [system] admin_started user=None env=local
+2026-08-20 23:34:24,087 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-20 23:35:21,710 INFO    events         [review] review_approved user=1 отзыв 1, 5★
+2026-08-21 00:03:25,664 INFO    events         [admin] user_limits user=3 покупки: нет, пополнение: да, поддержка: да, процент: общий
+2026-08-21 00:03:33,498 INFO    events         [admin] user_limits user=3 покупки: да, пополнение: да, поддержка: да, процент: общий
+2026-08-21 00:06:32,437 INFO    events         [system] admin_started user=None env=local
+2026-08-21 00:06:32,457 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 00:22:43,878 INFO    events         [system] admin_started user=None env=local
+2026-08-21 00:22:43,897 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 00:24:01,514 INFO    admin          настроек по умолчанию добавлено: 2
+2026-08-21 00:24:01,517 INFO    events         [system] admin_started user=None env=local
+2026-08-21 00:24:01,539 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 00:25:44,656 INFO    events         [system] admin_started user=None env=local
+2026-08-21 00:25:44,876 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 00:26:02,515 INFO    events         [system] admin_started user=None env=local
+2026-08-21 00:26:02,536 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 02:19:49,631 INFO    events         [system] admin_started user=None env=local
+2026-08-21 02:19:49,656 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 02:24:22,182 INFO    events         [system] admin_started user=None env=local
+2026-08-21 02:24:22,201 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 02:25:44,462 INFO    events         [review] card_bg_uploaded user=None review_card_bg.jpg, 1983×793
+2026-08-21 02:26:17,759 INFO    events         [review] review_test_created user=None тестовый отзыв 2: 5★, Индия +91
+2026-08-21 02:27:53,988 INFO    events         [system] admin_started user=None env=local
+2026-08-21 02:27:54,007 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 12:00:19,554 INFO    events         [system] admin_started user=None env=local
+2026-08-21 12:00:19,573 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 12:01:00,146 INFO    events         [admin] login user=None вход admin
+2026-08-21 12:01:45,756 INFO    events         [review] review_test_created user=None тестовый отзыв 3: 1★, Индия +91
+2026-08-21 12:02:16,725 INFO    events         [review] review_test_deleted user=None тестовый отзыв 2, сообщение 3 осталось в канале
+2026-08-21 12:02:25,901 INFO    events         [review] review_test_deleted user=None тестовый отзыв 3, сообщение 4 осталось в канале
+2026-08-21 12:05:43,804 INFO    events         [review] review_approved user=1 отзыв 2, 5★
+2026-08-21 12:55:46,727 INFO    events         [system] admin_started user=None env=local
+2026-08-21 12:55:46,747 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 17:20:47,298 INFO    events         [system] admin_started user=None env=local
+2026-08-21 17:20:47,335 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 17:21:25,885 INFO    events         [support] ticket_closed user=1 обращение №1
+2026-08-21 21:08:28,082 INFO    events         [system] admin_started user=None env=local
+2026-08-21 21:08:28,111 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-21 21:08:28,117 INFO    uvicorn.error  Application startup complete.
+2026-08-21 21:11:01,367 INFO    uvicorn.access 127.0.0.1:62202 - "GET /login HTTP/1.1" 200
+2026-08-21 21:11:02,898 INFO    uvicorn.access 127.0.0.1:62202 - "GET /static/admin.css?v=1 HTTP/1.1" 200
+2026-08-21 21:11:05,793 INFO    uvicorn.access 127.0.0.1:62202 - "GET /favicon.ico HTTP/1.1" 404
+2026-08-21 21:14:44,972 INFO    events         [admin] login user=None вход admin
+2026-08-21 21:14:45,194 INFO    uvicorn.access 127.0.0.1:62786 - "POST /login HTTP/1.1" 303
+2026-08-21 21:14:46,372 INFO    uvicorn.access 127.0.0.1:62786 - "GET / HTTP/1.1" 200
+2026-08-21 21:14:47,609 INFO    uvicorn.access 127.0.0.1:62786 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:16:56,506 INFO    uvicorn.access 127.0.0.1:63085 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:17:23,027 INFO    uvicorn.access 127.0.0.1:63098 - "GET / HTTP/1.1" 200
+2026-08-21 21:17:23,346 INFO    uvicorn.access 127.0.0.1:63098 - "GET /static/admin.css?v=1 HTTP/1.1" 304
+2026-08-21 21:17:27,941 INFO    uvicorn.access 127.0.0.1:63110 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:19:09,523 INFO    uvicorn.access 127.0.0.1:63235 - "POST /broadcasts HTTP/1.1" 303
+2026-08-21 21:19:09,640 INFO    uvicorn.access 127.0.0.1:63235 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:19:16,656 INFO    uvicorn.access 127.0.0.1:63236 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:19:19,908 INFO    uvicorn.access 127.0.0.1:63236 - "GET /orders HTTP/1.1" 200
+2026-08-21 21:19:21,301 INFO    uvicorn.access 127.0.0.1:63236 - "GET /support HTTP/1.1" 200
+2026-08-21 21:19:23,564 INFO    uvicorn.access 127.0.0.1:63236 - "GET /support/1 HTTP/1.1" 200
+2026-08-21 21:19:26,791 INFO    uvicorn.access 127.0.0.1:63236 - "GET / HTTP/1.1" 200
+2026-08-21 21:19:28,084 INFO    uvicorn.access 127.0.0.1:63236 - "GET /support HTTP/1.1" 200
+2026-08-21 21:19:29,141 INFO    uvicorn.access 127.0.0.1:63236 - "GET / HTTP/1.1" 200
+2026-08-21 21:19:33,875 INFO    uvicorn.access 127.0.0.1:63236 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:19:34,902 INFO    uvicorn.access 127.0.0.1:63236 - "GET /logs HTTP/1.1" 200
+2026-08-21 21:19:36,404 INFO    uvicorn.access 127.0.0.1:63236 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:19:47,023 INFO    uvicorn.access 127.0.0.1:63240 - "GET /security/ip HTTP/1.1" 200
+2026-08-21 21:19:53,003 INFO    uvicorn.access 127.0.0.1:63252 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:20:01,222 INFO    events         [admin] logout user=None 
+2026-08-21 21:20:01,248 INFO    uvicorn.access 127.0.0.1:63262 - "POST /logout HTTP/1.1" 303
+2026-08-21 21:20:01,299 INFO    uvicorn.access 127.0.0.1:63263 - "GET /login HTTP/1.1" 200
+2026-08-21 21:20:08,542 WARNING events         [admin] login_failed user=None неудачный вход: dwdw (1 из 10)
+2026-08-21 21:20:08,574 INFO    uvicorn.access 127.0.0.1:63288 - "POST /login HTTP/1.1" 401
+2026-08-21 21:20:20,165 INFO    events         [admin] login user=None вход admin
+2026-08-21 21:20:20,185 INFO    uvicorn.access 127.0.0.1:63296 - "POST /login HTTP/1.1" 303
+2026-08-21 21:20:20,387 INFO    uvicorn.access 127.0.0.1:63296 - "GET / HTTP/1.1" 200
+2026-08-21 21:20:22,284 INFO    uvicorn.access 127.0.0.1:63296 - "GET /logs HTTP/1.1" 200
+2026-08-21 21:20:29,608 INFO    uvicorn.access 127.0.0.1:63303 - "GET /logs?section=&level=warn&event=&user_id= HTTP/1.1" 422
+2026-08-21 21:20:29,911 INFO    uvicorn.access 127.0.0.1:63304 - "GET /favicon.ico HTTP/1.1" 404
+2026-08-21 21:20:32,591 INFO    uvicorn.access 127.0.0.1:63303 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:20:36,029 INFO    uvicorn.access 127.0.0.1:63303 - "GET /security/ip HTTP/1.1" 200
+2026-08-21 21:20:39,357 INFO    uvicorn.access 127.0.0.1:63303 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:20:42,006 INFO    uvicorn.access 127.0.0.1:63303 - "GET /maintenance HTTP/1.1" 200
+2026-08-21 21:21:01,586 INFO    uvicorn.access 127.0.0.1:63330 - "GET /logs HTTP/1.1" 200
+2026-08-21 21:21:02,127 INFO    uvicorn.access 127.0.0.1:63330 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:21:19,924 INFO    uvicorn.access 127.0.0.1:63349 - "GET /settings HTTP/1.1" 200
+2026-08-21 21:21:21,577 INFO    uvicorn.access 127.0.0.1:63349 - "GET / HTTP/1.1" 200
+2026-08-21 21:24:06,629 INFO    uvicorn.access 127.0.0.1:63471 - "GET / HTTP/1.1" 200
+2026-08-21 21:24:08,825 INFO    uvicorn.access 127.0.0.1:63471 - "GET /support HTTP/1.1" 200
+2026-08-21 21:24:10,146 INFO    uvicorn.access 127.0.0.1:63471 - "GET /catalog HTTP/1.1" 200
+2026-08-21 21:24:12,685 INFO    uvicorn.access 127.0.0.1:63471 - "GET /catalog/market HTTP/1.1" 200
+2026-08-21 21:24:17,549 INFO    uvicorn.access 127.0.0.1:63471 - "GET /catalog/market?only=all HTTP/1.1" 200
+2026-08-21 21:24:25,028 INFO    uvicorn.access 127.0.0.1:63471 - "POST /catalog/market/AT HTTP/1.1" 303
+2026-08-21 21:24:25,085 INFO    uvicorn.access 127.0.0.1:63471 - "GET /catalog/market?only=all HTTP/1.1" 200
+2026-08-21 21:24:31,857 INFO    uvicorn.access 127.0.0.1:63496 - "GET /catalog HTTP/1.1" 200
+2026-08-21 21:24:34,711 INFO    uvicorn.access 127.0.0.1:63496 - "GET /catalog/new HTTP/1.1" 200
+2026-08-21 21:24:54,066 INFO    uvicorn.access 127.0.0.1:63497 - "GET /catalog HTTP/1.1" 200
+2026-08-21 21:44:28,864 INFO    uvicorn.access 127.0.0.1:64752 - "GET / HTTP/1.1" 200
+2026-08-21 21:44:31,015 INFO    uvicorn.access 127.0.0.1:64752 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:47:24,352 INFO    events         [broadcast] broadcast_created user=None рассылка 1, аудитория all
+2026-08-21 21:47:24,367 INFO    uvicorn.access 127.0.0.1:64890 - "POST /broadcasts HTTP/1.1" 303
+2026-08-21 21:47:24,541 INFO    uvicorn.access 127.0.0.1:64890 - "GET /broadcasts/1 HTTP/1.1" 200
+2026-08-21 21:47:27,779 INFO    events         [broadcast] broadcast_started user=None рассылка 1, получателей 3
+2026-08-21 21:47:27,799 INFO    uvicorn.access 127.0.0.1:64890 - "POST /broadcasts/1/start HTTP/1.1" 303
+2026-08-21 21:47:27,873 INFO    uvicorn.access 127.0.0.1:64890 - "GET /broadcasts/1 HTTP/1.1" 200
+2026-08-21 21:47:38,995 INFO    uvicorn.access 127.0.0.1:64906 - "GET /broadcasts/1 HTTP/1.1" 200
+2026-08-21 21:47:43,315 INFO    uvicorn.access 127.0.0.1:64913 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:50:55,144 INFO    uvicorn.access 127.0.0.1:65168 - "POST /broadcasts HTTP/1.1" 303
+2026-08-21 21:50:55,257 INFO    uvicorn.access 127.0.0.1:65168 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:51:07,082 INFO    uvicorn.access 127.0.0.1:65173 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:51:19,432 INFO    uvicorn.access 127.0.0.1:65219 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 21:52:27,007 INFO    uvicorn.access 127.0.0.1:65282 - "POST /broadcasts HTTP/1.1" 303
+2026-08-21 21:52:27,104 INFO    uvicorn.access 127.0.0.1:65282 - "GET /broadcasts HTTP/1.1" 200
+2026-08-21 22:13:06,210 INFO    uvicorn.access 127.0.0.1:51017 - "GET /catalog HTTP/1.1" 200
+2026-08-21 22:13:06,451 INFO    uvicorn.access 127.0.0.1:51017 - "GET /static/admin.css?v=1 HTTP/1.1" 200
+2026-08-21 22:13:07,667 INFO    uvicorn.access 127.0.0.1:51017 - "GET /catalog/market HTTP/1.1" 200
+2026-08-21 22:13:09,591 INFO    uvicorn.access 127.0.0.1:51017 - "GET /catalog/market?only=all HTTP/1.1" 200
+2026-08-21 22:13:16,097 INFO    events         [admin] market_scan_started user=None стран: 89, потолок: без, спам: no
+2026-08-21 22:13:16,146 INFO    uvicorn.access 127.0.0.1:51018 - "POST /catalog/market/scan HTTP/1.1" 303
+2026-08-21 22:13:16,237 INFO    uvicorn.access 127.0.0.1:51018 - "GET /catalog/market?only=all HTTP/1.1" 200
+2026-08-21 22:13:43,371 INFO    uvicorn.access 127.0.0.1:51039 - "GET /logs HTTP/1.1" 200
+2026-08-21 22:13:48,363 INFO    uvicorn.access 127.0.0.1:51039 - "GET /catalog HTTP/1.1" 200
+2026-08-21 22:14:16,369 INFO    uvicorn.access 127.0.0.1:51091 - "GET /catalog/market HTTP/1.1" 200
+2026-08-21 22:15:40,005 INFO    events         [lzt] market_scan user=None стран: 89, потолок: без, спам: no
+2026-08-21 22:51:54,732 INFO    events         [system] admin_started user=None env=local
+2026-08-21 22:51:54,749 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 09:16:57,747 INFO    events         [system] admin_started user=None env=local
+2026-08-22 09:16:57,775 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:13:25,544 INFO    events         [system] admin_started user=None env=local
+2026-08-22 15:13:25,601 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:17:14,309 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 15:17:14,335 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:19:55,072 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 15:19:55,093 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:30:24,010 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 15:30:24,030 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:51:53,729 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 15:51:53,747 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 15:55:30,022 WARNING events         [admin] login_failed user=None неудачный вход: вфцв (1 из 10)
+2026-08-22 15:56:39,121 INFO    events         [admin] login user=None вход admin
+2026-08-22 16:00:38,849 INFO    events         [broadcast] broadcast_created user=None рассылка 2, аудитория all
+2026-08-22 16:00:43,412 INFO    events         [broadcast] broadcast_started user=None рассылка 2, получателей 3
+2026-08-22 16:17:42,832 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 16:17:42,873 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 16:18:29,535 INFO    events         [admin] login user=None вход admin
+2026-08-22 16:18:49,242 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 16:18:49,271 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 16:20:39,997 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 16:20:40,027 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 16:46:10,042 WARNING events         [admin] login_failed user=None неудачный вход: овлвла (1 из 10)
+2026-08-22 16:58:47,838 WARNING events         [admin] login_failed user=None неудачный вход: wrong-clean (1 из 10)
+2026-08-22 17:00:47,188 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 17:00:47,205 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 17:01:21,305 WARNING events         [admin] login_failed user=None неудачный вход: wrong-clean (1 из 10)
+2026-08-22 17:01:21,493 WARNING events         [admin] login_failed user=None неудачный вход: wrong-clean (2 из 10)
+2026-08-22 17:01:21,536 WARNING events         [admin] login_failed user=None неудачный вход: wrong-clean (3 из 10)
+2026-08-22 17:03:05,309 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 17:03:05,329 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 17:03:46,672 WARNING events         [admin] login_failed user=None неудачный вход: wrong-final (1 из 10)
+2026-08-22 17:03:46,892 WARNING events         [admin] login_failed user=None неудачный вход: wrong-final (2 из 10)
+2026-08-22 17:03:46,987 WARNING events         [admin] login_failed user=None неудачный вход: wrong-final (3 из 10)
+2026-08-22 17:25:05,934 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 17:25:05,954 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 17:43:07,912 INFO    events         [admin] login_ip_unbanned user=None бан снят: 203.0.113.77
+2026-08-22 17:43:15,212 WARNING events         [admin] login_failed user=None неудачный вход: hehs (1 из 10)
+2026-08-22 17:43:18,313 WARNING events         [admin] login_failed user=None неудачный вход: hsjsjs (2 из 10)
+2026-08-22 17:43:21,823 WARNING events         [admin] login_failed user=None неудачный вход: sjjsks (3 из 10)
+2026-08-22 17:43:36,559 WARNING events         [admin] login_failed user=None неудачный вход: jejej (4 из 10)
+2026-08-22 17:43:39,619 WARNING events         [admin] login_failed user=None неудачный вход: zhsjjd (5 из 10)
+2026-08-22 17:43:42,559 WARNING events         [admin] login_failed user=None неудачный вход: sjjsjs (6 из 10)
+2026-08-22 17:43:45,263 WARNING events         [admin] login_failed user=None неудачный вход: siisjs (7 из 10)
+2026-08-22 17:52:24,732 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 17:52:24,756 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 18:35:31,458 INFO    events         [admin] login user=None вход admin
+2026-08-22 18:42:37,421 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 18:42:37,445 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 22:04:02,545 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 22:04:02,571 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 22:05:59,297 INFO    events         [admin] offer_deleted user=None IN Индия +91
+2026-08-22 22:10:04,450 INFO    events         [admin] offer_created user=None 1 США +1 🇺🇸
+2026-08-22 22:11:18,292 INFO    events         [balance] credit user=2 +40 ₽ → 40 ₽ (.)
+2026-08-22 22:11:37,693 INFO    events         [admin] offer_updated user=None 1: buy_limit
+2026-08-22 22:12:44,169 INFO    events         [balance] debit user=2 −40 ₽ → 0 ₽ (,)
+2026-08-22 22:12:52,261 INFO    events         [balance] credit user=1 +20 ₽ → 40 ₽ (.)
+2026-08-22 22:17:53,674 INFO    events         [review] review_approved user=1 отзыв 3, 5★
+2026-08-22 22:18:13,090 INFO    events         [support] admin_message user=3 обращение №3: пачему обижают
+2026-08-22 23:00:16,264 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 23:00:16,284 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 23:02:34,121 ERROR   asyncio        Task exception was never retrieved
+future: <Task finished name='Task-17' coro=<IocpProactor.accept.<locals>.accept_coro() done, defined at C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:564> exception=OSError(22, 'Указанное сетевое имя более недоступно', None, 64, None)>
+Traceback (most recent call last):
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py", line 567, in accept_coro
+    await future
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py", line 556, in finish_accept
+    ov.getresult()
+    ~~~~~~~~~~~~^^
+OSError: [WinError 64] Указанное сетевое имя более недоступно
+2026-08-22 23:02:34,132 ERROR   asyncio        Accept failed on a socket
+socket: <asyncio.TransportSocket fd=832, family=2, type=1, proto=6, laddr=('127.0.0.1', 8080)>
+Traceback (most recent call last):
+  File "C:\Users\Onyx\AppData\Local\Programs\Python\Python314\Lib\asyncio\proactor_events.py", line 845, in loop
+    conn, addr = f.result()
+                 ~~~~~~~~^^
+OSError: [WinError 64] Указанное сетевое имя более недоступно
+2026-08-22 23:03:16,465 INFO    events         [system] admin_started user=None env=prod
+2026-08-22 23:03:16,483 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-22 23:03:43,161 INFO    events         [support] ticket_closed user=3 обращение №3
+2026-08-22 23:03:44,346 INFO    events         [support] ticket_closed user=3 обращение №4
+2026-08-22 23:03:44,772 INFO    events         [support] ticket_reopened user=3 обращение №4
+2026-08-22 23:03:45,988 INFO    events         [support] ticket_closed user=3 обращение №2
+2026-08-22 23:03:46,761 INFO    events         [support] ticket_closed user=3 обращение №4
+2026-08-22 23:04:26,397 INFO    events         [admin] login user=None вход admin
+2026-08-23 14:30:53,756 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 14:30:53,801 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 14:38:15,954 WARNING events         [admin] login_failed user=None неудачный вход: hjdf (1 из 10)
+2026-08-23 14:38:19,175 WARNING events         [admin] login_failed user=None неудачный вход: sjsis (2 из 10)
+2026-08-23 14:38:23,825 WARNING events         [admin] login_failed user=None неудачный вход: 9u1jwd (3 из 10)
+2026-08-23 14:38:26,570 WARNING events         [admin] login_failed user=None неудачный вход: susus (4 из 10)
+2026-08-23 14:38:30,007 WARNING events         [admin] login_failed user=None неудачный вход: susuus (5 из 10)
+2026-08-23 14:38:35,237 WARNING events         [admin] login_failed user=None неудачный вход: susiis (6 из 10)
+2026-08-23 14:38:48,340 WARNING events         [admin] login_failed user=None неудачный вход: wjis (7 из 10)
+2026-08-23 14:46:23,466 WARNING events         [admin] login_failed user=None неудачный вход: влвлв (8 из 10)
+2026-08-23 14:46:27,521 WARNING events         [admin] login_failed user=None неудачный вход: дыжыжы (9 из 10)
+2026-08-23 14:46:31,694 WARNING events         [admin] login_ip_banned user=None перебор пароля: 10 неудач, адрес забанен
+2026-08-23 14:46:31,715 WARNING events         [admin] login_failed user=None неудачный вход: ksksk (10 из 10)
+2026-08-23 14:48:25,528 INFO    events         [admin] login user=None вход admin
+2026-08-23 14:48:52,438 INFO    events         [admin] login_ip_unbanned user=None бан снят: 141.227.174.128
+2026-08-23 14:49:04,444 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.220
+2026-08-23 14:49:07,646 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 141.227.170.45
+2026-08-23 14:49:10,356 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.82
+2026-08-23 14:49:13,066 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.91
+2026-08-23 14:49:15,493 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.162
+2026-08-23 14:49:19,045 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.223
+2026-08-23 14:49:22,589 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 198.51.100.15
+2026-08-23 14:49:26,480 INFO    events         [admin] login_ip_unbanned user=None счётчик неудач сброшен: 141.227.170.14
+2026-08-23 14:55:28,909 INFO    events         [admin] settings_changed user=None earn.comments.text
+2026-08-23 14:56:15,481 INFO    events         [admin] market_scan_started user=None стран: 89, потолок: без, спам: no
+2026-08-23 14:59:03,537 INFO    events         [lzt] market_scan user=None стран: 89, потолок: без, спам: no
+2026-08-23 15:12:31,461 INFO    events         [admin] settings_changed user=None earn.comments.text
+2026-08-23 15:25:23,746 INFO    events         [admin] settings_changed user=None earn.comments.text
+2026-08-23 15:59:19,657 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 15:59:19,688 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 16:00:21,727 INFO    events         [balance] credit user=1 +40 ₽ → 40 ₽
+2026-08-23 16:01:35,815 INFO    events         [support] admin_message user=1 обращение №5: здравствуйте
+2026-08-23 17:19:44,593 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 17:19:44,625 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 17:20:56,683 INFO    events         [shop] replacement_rejected user=1 заявка отклонена администратором
+2026-08-23 17:27:18,048 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 17:27:18,078 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 20:09:09,501 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 20:09:09,527 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 22:05:00,438 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 22:05:00,464 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 22:50:26,398 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 22:50:26,435 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-23 23:05:09,025 INFO    events         [system] admin_started user=None env=prod
+2026-08-23 23:05:09,097 INFO    admin          админка на http://127.0.0.1:8080
