@@ -10,6 +10,8 @@ aiohttp-socks==0.10.1
 # Веб: админка, мини-апп, вебхуки
 fastapi==0.141.1
 uvicorn[standard]==0.52.4
+# Панели, которые принудительно запускают `gunicorn run:app`.
+gunicorn==23.0.0; platform_system != "Windows"
 jinja2==3.1.6
 python-multipart==0.0.20
 itsdangerous==2.2.0

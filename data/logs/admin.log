@@ -313,3 +313,28 @@ OSError: [WinError 64] Указанное сетевое имя более не�
 2026-08-23 22:50:26,435 INFO    admin          админка на http://127.0.0.1:8080
 2026-08-23 23:05:09,025 INFO    events         [system] admin_started user=None env=prod
 2026-08-23 23:05:09,097 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 00:31:11,601 INFO    events         [system] admin_started user=None env=prod
+2026-08-24 00:31:11,626 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 00:31:11,693 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 00:31:11,694 INFO    uvicorn.error  Application startup complete.
+2026-08-24 00:31:11,696 INFO    uvicorn.error  Uvicorn running on http://0.0.0.0:8097 (Press CTRL+C to quit)
+2026-08-24 00:31:39,788 INFO    uvicorn.access 127.0.0.1:49942 - "GET /healthz HTTP/1.1" 200
+2026-08-24 00:31:40,477 INFO    uvicorn.access 127.0.0.1:49943 - "GET /healthz HTTP/1.1" 200
+2026-08-24 01:22:43,466 INFO    events         [system] admin_started user=None env=local
+2026-08-24 01:22:43,503 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 01:22:43,597 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 01:42:36,619 INFO    events         [system] admin_started user=None env=local
+2026-08-24 01:42:36,649 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 01:42:36,791 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 01:47:40,331 INFO    events         [system] admin_started user=None env=local
+2026-08-24 01:47:40,370 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 01:47:40,476 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 01:50:51,378 INFO    events         [system] admin_started user=None env=local
+2026-08-24 01:50:51,423 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 01:50:51,574 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 01:54:29,581 INFO    events         [system] admin_started user=None env=local
+2026-08-24 01:54:29,624 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 01:54:29,730 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 02:00:05,889 INFO    events         [system] admin_started user=None env=local
+2026-08-24 02:00:05,940 INFO    admin          админка на http://127.0.0.1:8080
+2026-08-24 02:00:06,058 INFO    web            web app on http://127.0.0.1:8081

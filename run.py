@@ -9,6 +9,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import atexit
+import asyncio
 import importlib.util
 import os
 import shutil
@@ -19,9 +21,11 @@ import sys
 import time
 import platform
 import stat
+import threading
 import urllib.request
 from contextlib import AsyncExitStack
 from dataclasses import dataclass
+from http import HTTPStatus
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -102,10 +106,17 @@ def host_aliases(*values: str | None) -> set[str]:
 class HostDispatchApp:
     """Serve the store and admin app from one public hosted port."""
 
-    def __init__(self, web_app, admin_app, admin_hosts: set[str]):
+    def __init__(
+        self,
+        web_app,
+        admin_app,
+        admin_hosts: set[str],
+        services: list[Service] | None = None,
+    ):
         self.web_app = web_app
         self.admin_app = admin_app
         self.admin_hosts = admin_hosts
+        self.services = services or []
 
     async def __call__(self, scope, receive, send):
         if scope["type"] == "lifespan":
@@ -117,6 +128,8 @@ class HostDispatchApp:
                     await stack.enter_async_context(
                         self.web_app.router.lifespan_context(self.web_app)
                     )
+                    for service in self.services:
+                        start(service)
                     await send({"type": "lifespan.startup.complete"})
                     while True:
                         message = await receive()
@@ -125,6 +138,9 @@ class HostDispatchApp:
                 await send({"type": "lifespan.shutdown.complete"})
             except Exception as exc:
                 await send({"type": "lifespan.startup.failed", "message": str(exc)})
+            finally:
+                for service in reversed(self.services):
+                    stop(service)
             return
 
         headers = dict(scope.get("headers", []))
@@ -137,6 +153,13 @@ class HostDispatchApp:
                 break
         target = self.admin_app if raw_host in self.admin_hosts else self.web_app
         await target(scope, receive, send)
+
+
+def env_enabled(name: str, default: bool = True) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def find_virtualenv_python() -> Path | None:
@@ -262,6 +285,8 @@ def tunnel_is_connected(cloudflared: Path) -> bool:
 
 
 def start(service: Service) -> None:
+    if service.process is not None and service.process.poll() is None:
+        return
     creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     service.process = subprocess.Popen(
         service.command,
@@ -301,6 +326,237 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def hosted_services(python: str, *, allow_tunnel: bool = True) -> list[Service]:
+    services: list[Service] = []
+    if env_enabled("RUN_BOT", True) and os.getenv("BOT_TOKEN", "").strip():
+        services.append(Service("Telegram-бот", [python, "-m", "app.bot.main"], critical=False))
+    if env_enabled("RUN_SUPPORT_BOT", True) and os.getenv("SUPPORT_BOT_TOKEN", "").strip():
+        services.append(
+            Service("Бот поддержки", [python, "-m", "app.bot.support_main"], critical=False)
+        )
+    tunnel_token = os.getenv("CLOUDFLARED_TUNNEL_TOKEN", "").strip()
+    if allow_tunnel and tunnel_token:
+        cloudflared = find_or_install_cloudflared()
+        if cloudflared is None:
+            print("[warning] CLOUDFLARED_TUNNEL_TOKEN задан, но cloudflared недоступен.", flush=True)
+        else:
+            services.append(
+                Service(
+                    "Cloudflare Tunnel",
+                    [str(cloudflared), "tunnel", "run", "--token", tunnel_token],
+                    critical=False,
+                )
+            )
+    return services
+
+
+def create_hosted_app(*, services: list[Service] | None = None):
+    """Application exported as run:app for Gunicorn/Uvicorn hosting panels."""
+    load_environment()
+    from app.admin.main import app as admin_app
+    from app.web.main import app as web_app
+
+    admin_hosts = host_aliases(
+        os.getenv("ADMIN_BASE_URL"),
+        os.getenv("ADMIN_DOMAIN"),
+        "dabbackwood.cfd",
+    )
+    return HostDispatchApp(web_app, admin_app, admin_hosts, services=services)
+
+
+class LazyHostedApp:
+    """Lazy ASGI app with a fallback adapter for sync Gunicorn workers.
+
+    Most panels use the project's ``gunicorn.conf.py`` and select the Uvicorn
+    worker. A few hard-code ``gunicorn run:app`` and force the default sync
+    worker. The latter calls an application as WSGI, so this object supports
+    both call conventions without duplicating the web or admin applications.
+    """
+
+    def __init__(self) -> None:
+        self.delegate = None
+        self.services: list[Service] | None = None
+        self._wsgi_loop: asyncio.AbstractEventLoop | None = None
+        self._wsgi_thread: threading.Thread | None = None
+        self._wsgi_ready = threading.Event()
+        self._wsgi_error: BaseException | None = None
+        self._wsgi_stack: AsyncExitStack | None = None
+        atexit.register(self._stop_wsgi_runtime)
+        if is_gunicorn_runtime():
+            load_environment()
+            self.services = hosted_services(str(Path(sys.executable).absolute()))
+            for service in self.services:
+                start(service)
+
+    def __call__(self, first, second=None, third=None):
+        # Uvicorn classifies callable objects with a synchronous __call__ as
+        # ASGI2 and first invokes ``app(scope)``. Support that convention as
+        # well as direct ASGI3 calls made by test clients and other servers.
+        if isinstance(first, dict) and "type" in first:
+            if second is None:
+                async def asgi2_instance(receive, send):
+                    await self._asgi(first, receive, send)
+
+                return asgi2_instance
+            return self._asgi(first, second, third)
+        # Gunicorn's sync worker calls ``app(environ, start_response)``.
+        return self._wsgi(first, second)
+
+    async def _asgi(self, scope, receive, send):
+        if self.delegate is None:
+            load_environment()
+            self.delegate = create_hosted_app(services=self.services)
+        await self.delegate(scope, receive, send)
+
+    def _wsgi(self, environ, start_response):
+        self._ensure_wsgi_runtime()
+        if self._wsgi_loop is None:
+            raise RuntimeError("WSGI runtime не запустился")
+        future = asyncio.run_coroutine_threadsafe(
+            self._handle_wsgi_request(environ), self._wsgi_loop
+        )
+        status, headers, body = future.result(timeout=180)
+        start_response(status, headers)
+        return [body]
+
+    def _ensure_wsgi_runtime(self) -> None:
+        if self._wsgi_thread is not None:
+            self._wsgi_ready.wait(timeout=30)
+            if self._wsgi_error is not None:
+                raise RuntimeError("Не удалось запустить приложение", self._wsgi_error)
+            return
+        self._wsgi_thread = threading.Thread(
+            target=self._run_wsgi_loop,
+            name="hosted-asgi-loop",
+            daemon=True,
+        )
+        self._wsgi_thread.start()
+        self._wsgi_ready.wait(timeout=30)
+        if self._wsgi_error is not None:
+            raise RuntimeError("Не удалось запустить приложение", self._wsgi_error)
+        if self._wsgi_loop is None:
+            raise RuntimeError("WSGI runtime не запустился за 30 секунд")
+
+    def _run_wsgi_loop(self) -> None:
+        loop = asyncio.new_event_loop()
+        self._wsgi_loop = loop
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self._start_wsgi_runtime())
+            self._wsgi_ready.set()
+            loop.run_forever()
+        except BaseException as exc:  # surfaced to the requesting worker
+            self._wsgi_error = exc
+            self._wsgi_ready.set()
+        finally:
+            if not loop.is_closed():
+                loop.close()
+
+    async def _start_wsgi_runtime(self) -> None:
+        load_environment()
+        if self.services is None:
+            self.services = hosted_services(str(Path(sys.executable).absolute()))
+        self.delegate = create_hosted_app(services=self.services)
+        self._wsgi_stack = AsyncExitStack()
+        await self._wsgi_stack.enter_async_context(
+            self.delegate.admin_app.router.lifespan_context(self.delegate.admin_app)
+        )
+        await self._wsgi_stack.enter_async_context(
+            self.delegate.web_app.router.lifespan_context(self.delegate.web_app)
+        )
+        for service in self.delegate.services:
+            start(service)
+
+    async def _handle_wsgi_request(self, environ):
+        body_length = int(environ.get("CONTENT_LENGTH") or 0)
+        body = environ["wsgi.input"].read(body_length) if body_length else b""
+        raw_path = environ.get("PATH_INFO") or "/"
+        query = (environ.get("QUERY_STRING") or "").encode("latin1")
+        headers = []
+        for key, value in environ.items():
+            if key.startswith("HTTP_"):
+                header_name = key[5:].replace("_", "-").lower().encode("latin1")
+                headers.append((header_name, str(value).encode("latin1")))
+        if environ.get("CONTENT_TYPE"):
+            headers.append((b"content-type", str(environ["CONTENT_TYPE"]).encode("latin1")))
+        if environ.get("CONTENT_LENGTH"):
+            headers.append((b"content-length", str(environ["CONTENT_LENGTH"]).encode("latin1")))
+        server_name = environ.get("SERVER_NAME", "127.0.0.1")
+        try:
+            server_port = int(environ.get("SERVER_PORT") or 80)
+        except (TypeError, ValueError):
+            server_port = 80
+        scope = {
+            "type": "http",
+            "asgi": {"version": "3.0", "spec_version": "2.3"},
+            "http_version": "1.1",
+            "method": environ.get("REQUEST_METHOD", "GET"),
+            "scheme": environ.get("wsgi.url_scheme", "http"),
+            "path": raw_path,
+            "raw_path": raw_path.encode("latin1"),
+            "query_string": query,
+            "root_path": "",
+            "headers": headers,
+            "client": (environ.get("REMOTE_ADDR", "127.0.0.1"), 0),
+            "server": (server_name, server_port),
+        }
+        sent = {"status": "500 Internal Server Error", "headers": [], "body": bytearray()}
+        received = False
+
+        async def receive():
+            nonlocal received
+            if received:
+                await asyncio.sleep(0)
+                return {"type": "http.disconnect"}
+            received = True
+            return {"type": "http.request", "body": body, "more_body": False}
+
+        async def send(message):
+            if message["type"] == "http.response.start":
+                status_code = int(message["status"])
+                sent["status"] = f"{status_code} {status_text(status_code)}"
+                sent["headers"] = [
+                    (key.decode("latin1"), value.decode("latin1"))
+                    for key, value in message.get("headers", [])
+                ]
+            elif message["type"] == "http.response.body":
+                sent["body"].extend(message.get("body", b""))
+
+        await self.delegate(scope, receive, send)
+        return sent["status"], sent["headers"], bytes(sent["body"])
+
+    def _stop_wsgi_runtime(self) -> None:
+        loop = self._wsgi_loop
+        if loop is None or loop.is_closed():
+            return
+        if self._wsgi_stack is not None:
+            future = asyncio.run_coroutine_threadsafe(self._wsgi_stack.aclose(), loop)
+            try:
+                future.result(timeout=10)
+            except Exception:
+                pass
+        for service in reversed(getattr(self.delegate, "services", [])):
+            stop(service)
+        loop.call_soon_threadsafe(loop.stop)
+
+
+def status_text(status_code: int) -> str:
+    try:
+        return HTTPStatus(status_code).phrase
+    except ValueError:
+        return "Unknown"
+
+
+def is_gunicorn_runtime() -> bool:
+    return "gunicorn" in sys.modules or "gunicorn" in Path(sys.argv[0]).name.lower()
+
+
+# Several hosting panels hard-code `gunicorn run:app`. Export a valid app so the
+# project works even when the panel ignores `python run.py`; in Gunicorn mode
+# background services are started while the worker is loading, before requests.
+app = LazyHostedApp()
+
+
 def main() -> int:
     ensure_virtualenv()
     load_environment()
@@ -333,33 +589,12 @@ def main() -> int:
             return result.returncode
 
     if hosted:
-        services: list[Service] = []
-        if not args.no_bot:
-            services.append(Service("Telegram-бот", [python, "-m", "app.bot.main"], critical=False))
-        if not args.no_support:
-            if os.getenv("SUPPORT_BOT_TOKEN", "").strip():
-                services.append(
-                    Service("Бот поддержки", [python, "-m", "app.bot.support_main"], critical=False)
-                )
-            else:
-                print("[warning] SUPPORT_BOT_TOKEN не задан — бот поддержки пропущен.", flush=True)
-
+        services = hosted_services(python, allow_tunnel=not args.no_tunnel)
+        if args.no_bot:
+            services = [service for service in services if service.name != "Telegram-бот"]
+        if args.no_support:
+            services = [service for service in services if service.name != "Бот поддержки"]
         tunnel_token = os.getenv("CLOUDFLARED_TUNNEL_TOKEN", "").strip()
-        if tunnel_token and not args.no_tunnel:
-            cloudflared = find_or_install_cloudflared()
-            if cloudflared is None:
-                print(
-                    "[warning] CLOUDFLARED_TUNNEL_TOKEN задан, но cloudflared недоступен.",
-                    flush=True,
-                )
-            else:
-                services.append(
-                    Service(
-                        "Cloudflare Tunnel",
-                        [str(cloudflared), "tunnel", "run", "--token", tunnel_token],
-                        critical=False,
-                    )
-                )
 
         admin_hosts = host_aliases(
             os.getenv("ADMIN_BASE_URL"),
@@ -376,14 +611,10 @@ def main() -> int:
             flush=True,
         )
         try:
-            from app.admin.main import app as admin_app
-            from app.web.main import app as web_app
             import uvicorn
 
-            for service in services:
-                start(service)
             uvicorn.run(
-                HostDispatchApp(web_app, admin_app, admin_hosts),
+                create_hosted_app(services=services),
                 host=bind_host,
                 port=web_port,
                 reload=False,
@@ -391,8 +622,7 @@ def main() -> int:
             )
             return 0
         finally:
-            for service in reversed(services):
-                stop(service)
+            pass
 
     services = []
     if not args.no_bot:

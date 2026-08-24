@@ -90,6 +90,9 @@ async def answer_photo(
     **kw,
 ) -> Message:
     """Send a screen banner and cache Telegram's file_id for later users."""
+    if not photo.is_file():
+        log.warning("баннер не найден: %s; отправляю экран текстом", photo)
+        return await answer(message, caption, keyboard, **kw)
     if len(caption) > CAPTION_LIMIT:
         await commit_before_io()
         try:
@@ -183,6 +186,9 @@ async def edit(
     второй Telegram уже не примет.
     """
     await commit_before_io()
+    if photo is not None and not photo.is_file():
+        log.warning("баннер не найден: %s; оставляю текстовый экран", photo)
+        photo = None
     if not isinstance(cb.message, Message):
         if answer:
             await answer_callback(cb)
