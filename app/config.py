@@ -8,6 +8,7 @@ from urllib.parse import quote
 
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
@@ -100,6 +101,26 @@ def mask_proxy(url: str | None) -> str:
         user = creds.partition(":")[0]
         return f"{scheme}://{user}:***@{endpoint}"
     return url
+
+
+def normalize_database_url(raw: str) -> str:
+    """Anchor relative SQLite files to the project, not the launch directory.
+
+    The bot, web app and admin panel are often started by different wrappers.
+    A relative ``./data/shop.db`` then silently points at a different file when
+    one wrapper has another current directory, which makes users see screens
+    from different databases.  Server databases and in-memory SQLite are
+    intentionally left untouched.
+    """
+    url = make_url(raw)
+    if not url.drivername.startswith("sqlite") or url.database in {None, ":memory:"}:
+        return raw
+
+    database = Path(url.database)
+    if database.is_absolute():
+        return raw
+    absolute = (BASE_DIR / database).resolve()
+    return str(url.set(database=str(absolute)))
 
 
 class Settings(BaseSettings):
@@ -213,6 +234,11 @@ class Settings(BaseSettings):
     def _fix_proxy(cls, value: str | None) -> str | None:
         """Разбираем формат прокси на старте, а не в момент первого запроса."""
         return normalize_proxy(value)
+
+    @field_validator("database_url", mode="after")
+    @classmethod
+    def _fix_database_url(cls, value: str) -> str:
+        return normalize_database_url(value)
 
     @model_validator(mode="after")
     def _secure_admin_session_in_production(self) -> Settings:

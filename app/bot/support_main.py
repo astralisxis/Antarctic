@@ -17,7 +17,7 @@ import logging
 from contextlib import suppress
 
 from aiogram import Bot, Dispatcher, F, Router
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramConflictError, TelegramForbiddenError
 from aiogram.filters import CommandStart
 from aiogram.types import BotCommand, ErrorEvent, Message
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,6 +26,7 @@ from app import db
 from app.bot import common, texts
 from app.bot.main import build_bot, with_retry
 from app.bot.middlewares import DbSessionMiddleware, UserMiddleware
+from app.bot.polling import DUPLICATE_INSTANCE_EXIT_CODE, SingleInstanceDispatcher
 from app.config import settings
 from app.db import session_scope
 from app.enums import LogLevel, LogSection
@@ -106,7 +107,7 @@ async def on_error(event: ErrorEvent) -> bool:
 
 
 def build_dispatcher() -> Dispatcher:
-    dp = Dispatcher()
+    dp = SingleInstanceDispatcher()
     dp.update.outer_middleware(DbSessionMiddleware())
     dp.update.outer_middleware(UserMiddleware())
     dp.include_router(router)
@@ -156,16 +157,23 @@ async def run() -> None:
         await db.dispose()
 
 
-def main() -> None:
+def main() -> int:
     with singleton("telegram-support") as acquired:
         if not acquired:
             log.error("бот поддержки уже запущен другим процессом; второй polling остановлен")
-            return
+            return DUPLICATE_INSTANCE_EXIT_CODE
         try:
             asyncio.run(run())
-        except (KeyboardInterrupt, SystemExit):
+        except TelegramConflictError:
+            log.critical(
+                "этот SUPPORT_BOT_TOKEN уже используется другим polling-процессом; "
+                "экземпляр остановлен без перезапуска"
+            )
+            return DUPLICATE_INSTANCE_EXIT_CODE
+        except KeyboardInterrupt:
             log.info("остановлен вручную")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

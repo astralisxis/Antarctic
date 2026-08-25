@@ -120,7 +120,7 @@ async def answer_photo(
     caption: str,
     keyboard: ReplyMarkup | None = None,
     **kw,
-) -> Message:
+) -> Message | None:
     """Send a screen banner and cache Telegram's file_id for later users."""
     if not photo.is_file():
         log.warning("баннер не найден: %s; отправляю экран текстом", photo)
@@ -152,13 +152,18 @@ async def answer_photo(
             **kw,
         )
     except TelegramNetworkError as exc:
-        # Uploading a local image can time out on a proxy or a slow connection.
-        # Do not let that hide the screen or its inline buttons: a text fallback
-        # is immediately usable and avoids an unhandled update error. We do not
-        # blindly retry an upload because Telegram may have accepted it before
-        # the client timed out, which would create duplicate banners.
-        log.warning("не удалось отправить баннер %s: %s; отправляю экран текстом", photo, exc)
-        return await answer(message, caption, keyboard, **kw)
+        # A timeout does not tell us whether Telegram accepted the upload.  A
+        # text fallback here used to create exactly the visible pair "photo,
+        # then the same screen without photo" when the response packet was
+        # lost.  Keep the possibly delivered photo as the only reply; the user
+        # can press the menu button again if the request really did not arrive.
+        log.warning(
+            "результат отправки баннера %s неизвестен после сетевой ошибки: %s; "
+            "повторный текстовый экран не отправляю",
+            photo,
+            exc,
+        )
+        return None
     _remember_photo(photo, sent)
     return sent
 
@@ -177,9 +182,10 @@ async def _replace_with_photo(
     text: str,
     keyboard: InlineKeyboardMarkup | None,
 ) -> None:
-    await answer_photo(message, photo, text, keyboard)
-    with suppress(TelegramBadRequest):
-        await message.delete()
+    replacement = await answer_photo(message, photo, text, keyboard)
+    if replacement is not None:
+        with suppress(TelegramBadRequest):
+            await message.delete()
 
 
 async def send_text(

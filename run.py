@@ -33,6 +33,9 @@ from urllib.parse import urlparse
 PROJECT_ROOT = Path(__file__).resolve().parent
 TUNNEL_CONFIG = PROJECT_ROOT / ".cloudflared" / "dabbackwood-config.yml"
 TUNNEL_ID = "9a5036eb-ca98-483c-aca6-ab6d5dc8a3c5"
+# Child bots use this code when another deployment owns the same Telegram
+# token.  Restarting that process would recreate duplicate replies forever.
+DUPLICATE_INSTANCE_EXIT_CODE = 78
 
 
 @dataclass
@@ -41,6 +44,7 @@ class Service:
     command: list[str]
     critical: bool = True
     process: subprocess.Popen[bytes] | None = None
+    disabled: bool = False
 
 
 def load_environment() -> None:
@@ -297,6 +301,8 @@ def tunnel_is_connected(cloudflared: Path) -> bool:
 
 
 def start(service: Service) -> None:
+    if service.disabled:
+        return
     if service.process is not None and service.process.poll() is None:
         return
     creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
@@ -314,10 +320,21 @@ async def supervise_services(services: list[Service], interval: float = 2.0) -> 
     while True:
         await asyncio.sleep(interval)
         for service in services:
+            if service.disabled:
+                continue
             process = service.process
             if process is None or process.poll() is None:
                 continue
             code = process.returncode
+            if code == DUPLICATE_INSTANCE_EXIT_CODE:
+                service.disabled = True
+                service.process = None
+                print(
+                    f"[stopped] {service.name}: тот же Telegram-токен уже занят "
+                    "другим процессом; автоматический перезапуск отключён",
+                    flush=True,
+                )
+                continue
             print(
                 f"[restart] {service.name} завершился с кодом {code}; перезапускаю",
                 flush=True,
@@ -602,7 +619,16 @@ def main() -> int:
     python = str(Path(sys.executable).absolute())
 
     hosted_flag = os.getenv("HOSTED_MODE", "").strip().lower()
-    hosted = bool(os.getenv("PORT")) or hosted_flag in {"1", "true", "yes"}
+    if hosted_flag in {"1", "true", "yes"}:
+        hosted = True
+    elif hosted_flag in {"0", "false", "no"}:
+        hosted = False
+    else:
+        # PORT is also present in the repository's deploy-oriented .env.  It
+        # must not turn a normal Windows launch into hosted mode and bypass the
+        # named local tunnel.  Real supported hosting targets are Linux; an
+        # explicit HOSTED_MODE=true still permits a Windows staging run.
+        hosted = os.name != "nt" and bool(os.getenv("PORT"))
     # Some hosts expose neither PORT nor a mode flag. ENV=prod on Linux is a
     # useful conservative fallback; HOSTED_MODE=false explicitly disables it.
     if (
@@ -612,6 +638,13 @@ def main() -> int:
         and hosted_flag not in {"0", "false", "no"}
     ):
         hosted = True
+
+    if not hosted and os.name == "nt" and hosted_flag in {"", "auto"}:
+        # The checked-in .env is also a deployment template and therefore says
+        # ENV=prod.  In automatic mode a Windows run is local by definition;
+        # do not make blank production-only secrets prevent the local web
+        # processes from starting.
+        os.environ["ENV"] = "local"
 
     ensure_dependencies(python, hosted=hosted)
     bind_host = "0.0.0.0" if hosted else os.getenv("HOST", "127.0.0.1")
@@ -662,7 +695,12 @@ def main() -> int:
 
     services = []
     if not args.no_bot:
-        services.append(Service("Telegram-бот", [python, "-m", "app.bot.main"], critical=False))
+        if os.getenv("BOT_TOKEN", "").strip():
+            services.append(
+                Service("Telegram-бот", [python, "-m", "app.bot.main"], critical=False)
+            )
+        else:
+            print("[warning] BOT_TOKEN не задан — основной бот пропущен.", flush=True)
     if not args.no_support:
         if os.getenv("SUPPORT_BOT_TOKEN", "").strip():
             services.append(

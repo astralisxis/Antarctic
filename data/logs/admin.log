@@ -338,3 +338,8 @@ OSError: [WinError 64] Указанное сетевое имя более не�
 2026-08-24 02:00:05,889 INFO    events         [system] admin_started user=None env=local
 2026-08-24 02:00:05,940 INFO    admin          админка на http://127.0.0.1:8080
 2026-08-24 02:00:06,058 INFO    web            web app on http://127.0.0.1:8081
+2026-08-24 22:43:01,046 WARNING admin          админов нет, ADMIN_PASSWORD в .env пуст — создайте вход: python -m app.tools.create_admin <логин> <пароль>
+2026-08-24 22:43:01,052 INFO    events         [system] admin_started user=None env=local
+2026-08-24 22:43:01,071 INFO    admin          админка на http://0.0.0.0:18080
+2026-08-25 17:20:08,740 INFO    events         [system] admin_started user=None env=local
+2026-08-25 17:20:08,778 INFO    admin          админка на http://0.0.0.0:8080

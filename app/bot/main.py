@@ -19,7 +19,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
-from aiogram.exceptions import TelegramForbiddenError, TelegramNetworkError
+from aiogram.exceptions import (
+    TelegramConflictError,
+    TelegramForbiddenError,
+    TelegramNetworkError,
+)
 from aiogram.types import (
     BotCommand,
     CallbackQuery,
@@ -35,6 +39,7 @@ from app.bot import texts
 from app.bot.handlers import ROUTERS
 from app.bot.handlers.topup import announce
 from app.bot.middlewares import DbSessionMiddleware, StateResetMiddleware, UserMiddleware
+from app.bot.polling import DUPLICATE_INSTANCE_EXIT_CODE, SingleInstanceDispatcher
 from app.config import settings
 from app.db import session_scope
 from app.enums import LogLevel, LogSection
@@ -90,7 +95,7 @@ def build_bot(token: str) -> Bot:
 
 
 def build_dispatcher() -> Dispatcher:
-    dp = Dispatcher()
+    dp = SingleInstanceDispatcher()
     # Сессия базы одна на апдейт, дальше пользователь — хендлеры получают готовое.
     dp.update.outer_middleware(DbSessionMiddleware())
     dp.update.outer_middleware(UserMiddleware())
@@ -218,16 +223,23 @@ async def run() -> None:
         await db.dispose()
 
 
-def main() -> None:
+def main() -> int:
     with singleton("telegram-main") as acquired:
         if not acquired:
             log.error("основной бот уже запущен другим процессом; второй polling остановлен")
-            return
+            return DUPLICATE_INSTANCE_EXIT_CODE
         try:
             asyncio.run(run())
-        except (KeyboardInterrupt, SystemExit):
+        except TelegramConflictError:
+            log.critical(
+                "этот BOT_TOKEN уже используется другим polling-процессом; "
+                "экземпляр остановлен без перезапуска"
+            )
+            return DUPLICATE_INSTANCE_EXIT_CODE
+        except KeyboardInterrupt:
             log.info("остановлен вручную")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
